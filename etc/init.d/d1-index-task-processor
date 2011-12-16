@@ -1,0 +1,182 @@
+#!/bin/sh
+# 
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Small shell script to show how to start the sample services.
+#
+# Adapt the following lines to your configuration
+# /etc/init.d/d1-synchronize -- startup script for the DataONE Sychronization Service
+#
+# Written by Miquel van Smoorenburg <miquels@cistron.nl>.
+# Modified for Debian GNU/Linux	by Ian Murdock <imurdock@gnu.ai.mit.edu>.
+# Modified for Tomcat by Stefan Gybas <sgybas@debian.org>.
+# Modified for Tomcat6 by Thierry Carrez <thierry.carrez@ubuntu.com>.
+# Modified for DataONE Processing Daemon by Robert Waltz <rwaltz@utk.edu>
+# Modified for DataONE Index Task Processor Daemon by Skye Roseboom <sroseboo@dataone.unm.edu>
+
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME="d1-index-task-processor"
+DESC="DataONE Index Task Processor Daemon"
+DAEMON="/usr/bin/jsvc"
+DAEMON_HOME="/usr/share/java"
+LOG_DIR="/var/log/dataone"
+CLASSPATH="$DAEMON_HOME/commons-daemon.jar:$DAEMON_HOME/d1_index_task_processor_daemon.jar"
+USER_NAME="tomcat6"
+JVM_TMP="/tmp/$NAME-temp"
+BOOTSTRAP_CLASS="org.dataone.cn.index.processor.IndexTaskProcessorDaemon"
+OUTPUT_FILE="$LOG_DIR/d1-index-task-processor-jsvc.log"
+ERROR_FILE="$LOG_DIR/d1-index-task-processor-jsvc.err"
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script"
+	exit 1
+fi
+
+if [ ! -f "$DAEMON_HOME/d1_index_task_processor_daemon.jar" ]; then
+	log_failure_msg "$NAME is not installed"
+	exit 1
+fi
+
+# The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
+# defined in $DEFAULT)
+JDK_DIRS="/usr/lib/jvm/java-6-sun"
+
+if [ -z "$JAVA_OPTS" ]; then
+	JAVA_OPTS="-Djava.awt.headless=true -XX:UseParallelGC -Xmx4096M -Xms1024M"
+fi
+
+
+# Look for the right JVM to use
+for jdir in $JDK_DIRS; do
+    if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
+	JAVA_HOME="$jdir"
+    fi
+done
+export JAVA_HOME
+
+# Make sure tomcat is started with system locale
+if [ -r /etc/default/locale ]; then
+	. /etc/default/locale
+	export LANG
+fi
+
+. /lib/lsb/init-functions
+. /etc/default/rcS
+RUN_PID="/var/run/$NAME.pid"
+
+case  $1  in 
+	  "start")
+		ulimit -Hn 16384
+		ulimit -Sn 16384
+		if [ -z "$JAVA_HOME" ]; then
+			log_failure_msg "no JDK found - please set JAVA_HOME"
+			exit 1
+		fi
+		if [ -e "$OUTPUT_FILE"]; then
+			 rm "$OUTPUT_FILE"
+		fi
+		if [ -e "$ERROR_FILE"]; then
+			rm "$ERROR_FILE"
+		fi
+		log_daemon_msg "Starting $DESC" "$NAME"
+		if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+			>/dev/null; then
+
+			# Regenerate POLICY_CACHE file
+			umask 022
+			# Remove / recreate JVM_TMP directory
+			rm -rf "$JVM_TMP"
+			mkdir "$JVM_TMP" || {
+				log_failure_msg "could not create JVM temporary directory"
+				exit 1
+			}
+			chown $USER_NAME "$JVM_TMP"
+			cd "$JVM_TMP"
+		
+			$DAEMON -home "$JAVA_HOME" -cp "$CLASSPATH" \
+			-debug -outfile "$OUTPUT_FILE" \
+			-errfile "$ERROR_FILE" \
+			-pidfile "$RUN_PID" -user "$USER_NAME" \
+			$JAVA_OPTS "$BOOTSTRAP_CLASS"
+
+		    sleep 5
+        	if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+			>/dev/null; then
+				log_end_msg 1
+			else
+				log_end_msg 0
+			fi
+		else
+	        log_progress_msg "(already running)"
+	        log_end_msg 0
+	    fi
+	    ;;
+			
+
+	"stop") 
+		log_daemon_msg "Stopping $DESC" "$NAME"
+			if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+			--user "$USER_NAME" --startas "$JAVA_HOME/bin/java" \
+			>/dev/null; then
+			log_progress_msg "(not running)"
+		else
+			$DAEMON \
+				-home "$JAVA_HOME" -cp "$CLASSPATH" \
+				-pidfile "$RUN_PID" \
+				-stop "$BOOTSTRAP_CLASS"
+		fi
+		rm -rf "$JVM_TMP"
+		log_end_msg 0
+		;;
+   "status")
+        if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+		--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+		>/dev/null; then
+	
+			if [ -f "$RUN_PID" ]; then
+				log_success_msg "$DESC is not running, but pid file exists."
+				exit 1
+			else
+				log_success_msg "$DESC is not running."
+				exit 3
+			fi
+		else
+			log_success_msg "$DESC is running with pid `cat $RUN_PID`"
+		fi
+		;;
+  "restart"|"force-reload")
+  	  ulimit -Hn 16384
+  	  ulimit -Sn 16384
+      if start-stop-daemon --test --stop --pidfile "$RUN_PID" \
+		--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+		>/dev/null; then
+		$0 stop
+		sleep 1
+	  fi
+	 $0 start
+	 ;;
+  *)
+	log_success_msg "Usage: $0 {start|stop|restart|force-reload|status}"
+	exit 1
+	;;
+esac
+
+exit 0
+    

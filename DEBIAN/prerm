@@ -1,0 +1,55 @@
+#!/bin/bash
+
+LONG_DATE=`date +%Y%m%d%H%M%S`
+
+## Handle the index build tool
+rm -f /usr/share/java/d1_index_build_tool.jar
+
+## handle index task generator
+/etc/init.d/d1-index-task-generator stop
+update-rc.d -f d1-index-task-generator remove
+rm -f /etc/init.d/d1-index-task-generator
+
+## handle index task processor
+/etc/init.d/d1-index-task-processor stop
+update-rc.d -f d1-index-task-processor remove
+rm -f /etc/init.d/d1-index-task-processor
+
+## clean up log and config directory
+rm -rf /etc/dataone/index
+rm -rf /var/log/dataone/index
+
+rm -f /var/run/d1-index-task-generator.pid
+rm -f /var/run/d1-index-task-processor.pid
+
+rm -f /usr/share/java/d1_index_task_generator_daemon.jar
+rm -f /usr/share/java/d1_index_task_processor_daemon.jar
+
+### Handle postgres cleanup
+PG=postgresql-8.4
+PG_CONF=/etc/postgresql/8.4/main
+PG_USER=postgres
+
+INDEX_DB=indextask
+INDEX_DB_USER=indexer
+INDEX_DB_PASS=indexer
+
+## drop index task schema and user
+echo "Dropping index task database"
+su ${PG_USER} -c "dropdb ${INDEX_DB}"
+echo "Droping index task database user indexer"
+su ${PG_USER} -c "psql --command \"DROP USER ${INDEX_DB_USER}\""
+
+##pg_hba.conf was modified, we should probably return it to original
+if [ -f ${PG_CONF}/pg_hba.conf.bak.index ]
+then
+  rm -f ${PG_CONF}/pg_hba.conf
+  mv ${PG_CONF}/pg_hba.conf.bak.index ${PG_CONF}/pg_hba.conf
+  chown ${PG_USER} ${PG_CONF}/pg_hba.conf
+  chgrp ${PG_USER} ${PG_CONF}/pg_hba.conf
+fi
+
+
+## Restart the postgres db
+echo "Restarting postgres database"
+/etc/init.d/${PG} restart

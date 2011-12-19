@@ -30,7 +30,7 @@ PG=postgresql-8.4
 PG_CONF=/etc/postgresql/8.4/main
 PG_USER=postgres
 
-INDEX_DB=indextask
+INDEX_DB=d1-index-queue
 INDEX_DB_USER=indexer
 INDEX_DB_PASS=indexer
 

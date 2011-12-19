@@ -53,3 +53,8 @@ fi
 ## Restart the postgres db
 echo "Restarting postgres database"
 /etc/init.d/${PG} restart
+
+######## Restore original solr index schema
+/etc/init.d/tomcat6 stop
+mv /usr/share/solr/d1-cn-index/conf/schema.xml.bak /usr/share/solr/d1-cn-index/confschema.xml
+/etc/init.d/tomcat6 start

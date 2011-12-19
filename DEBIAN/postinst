@@ -40,7 +40,7 @@ INDEX_DB_USER=indexer
 INDEX_DB_PASS=indexer
 
 ## modify pg_hba.conf
-PG_HBA_IS_MODIFIED=`grep "${INDEX_DB} ${INDEX_USER}" ${PG_CONF}/pg_hba.conf`
+PG_HBA_IS_MODIFIED=`grep "${INDEX_DB} ${INDEX_DB_USER}" ${PG_CONF}/pg_hba.conf`
 if [ "${PG_HBA_IS_MODIFIED}" == "" ]
 then
   echo "backing up ${PG_CONF}/pg_hba.conf to ${PG_CONF}/pg_hba.conf.bak.index"
@@ -57,7 +57,7 @@ echo "Creating index task database schema"
 su ${PG_USER} -c "createdb ${INDEX_DB}"
 
 echo "Creating index task db user - indexer" 
-su ${PG_USER} -c "psql -c \"CREATE USER ${DB_USER} WITH UNENCRYPTED PASSWORD '${DB_PASS}'\""
+su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""
 
 su ${PG_USER} -c "psql -c \"CREATE TABLE index_task
 (
@@ -77,7 +77,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE index_task
-  OWNER TO ${DB_USER};\""
+  OWNER TO ${INDEX_DB_USER};\""
 
 ## Restart the postgres db
 echo "Restarting postgres database"
@@ -98,6 +98,7 @@ chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/conf/schema.xml
 /etc/init.d/tomcat6 start
 
 ######### Finished! inform user how to start daemons
+echo ""
 echo "Build or re-build Solr Index with /usr/share/d1_index_build_tool.jar while index task generator and processor are not running."
 echo "Start Index Task Generator with /etc/init.d/d1-index-task-generator start"
 echo "Start Index Task Processor with /etc/init.d/d1-index-task-processor start"

@@ -91,7 +91,7 @@ ufw allow 5702
 ######## Update solr index schema
 /etc/init.d/tomcat6 stop
 
-mv /usr/share/solr/d1-cn-index/conf/schema.xml /usr/share/solr/d1-cn-index/confschema.xml.bak
+mv /usr/share/solr/d1-cn-index/conf/schema.xml /usr/share/solr/d1-cn-index/schema.xml.bak
 cp /usr/share/dataone-cn-index/debian/index-solr-schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml
 chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/conf/schema.xml
 
@@ -99,7 +99,7 @@ chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/conf/schema.xml
 
 ######### Finished! inform user how to start daemons
 echo ""
-echo "Build or re-build Solr Index with /usr/share/d1_index_build_tool.jar while index task generator and processor are not running."
+echo "Build or re-build Solr Index with /usr/share/dataone-cn-index/d1_index_build_tool.jar while index task generator and processor are not running."
 echo "Start Index Task Generator with /etc/init.d/d1-index-task-generator start"
 echo "Start Index Task Processor with /etc/init.d/d1-index-task-processor start"
 

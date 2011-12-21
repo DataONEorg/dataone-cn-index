@@ -59,25 +59,6 @@ su ${PG_USER} -c "createdb ${INDEX_DB}"
 echo "Creating index task db user - indexer" 
 su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""
 
-su ${PG_USER} -c "psql -c \"CREATE TABLE index_task
-(
-  id bigint NOT NULL,
-  datesysmetamodified bigint NOT NULL,
-  formatid character varying(255),
-  objectpath character varying(255),
-  pid character varying(255) NOT NULL,
-  priority integer NOT NULL,
-  status character varying(255),
-  sysmetadata text,
-  taskmodifieddate bigint NOT NULL,
-  version integer NOT NULL,
-  CONSTRAINT index_task_pkey PRIMARY KEY (id )
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE index_task
-  OWNER TO ${INDEX_DB_USER};\""
 
 ## Restart the postgres db
 echo "Restarting postgres database"

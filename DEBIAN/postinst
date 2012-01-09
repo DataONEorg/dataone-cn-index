@@ -8,11 +8,14 @@ chmod +x /etc/init.d/d1-index-task-processor
 update-rc.d d1-index-task-generator defaults 99
 update-rc.d d1-index-task-processor defaults 99
 
-#these may need to be configured per environment
+#provide context properties files for postgres, log4j, solr location
 cp /usr/share/dataone-cn-index/debian/log4j-generator.properties /etc/dataone/index/log4j-generator.properties
 cp /usr/share/dataone-cn-index/debian/log4j-processor.properties /etc/dataone/index/log4j-processor.properties
 cp /usr/share/dataone-cn-index/debian/jdbc.properties /etc/dataone/index/jdbc.properties
 cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.properties
+
+#provide metadata index generation configuration files
+cp /usr/share/dataone-cn-index/debian/index-generation-context/ /etc/dataone/index/index-generation-context
 
 chown -R tomcat6.tomcat6 /etc/dataone/index
 

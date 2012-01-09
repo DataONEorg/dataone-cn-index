@@ -15,7 +15,14 @@ cp /usr/share/dataone-cn-index/debian/jdbc.properties /etc/dataone/index/jdbc.pr
 cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.properties
 
 #provide metadata index generation configuration files
-cp /usr/share/dataone-cn-index/debian/index-generation-context/ /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-eml-base.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-eml200.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-eml201.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-eml210.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-eml211.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-resourcemap.xml /etc/dataone/index/index-generation-context
+cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-systemmeta100.xml /etc/dataone/index/index-generation-context
+
 
 chown -R tomcat6.tomcat6 /etc/dataone/index
 

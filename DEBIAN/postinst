@@ -82,9 +82,15 @@ ufw allow 5702
 ######## Update solr index schema
 /etc/init.d/tomcat6 stop
 
-mv /usr/share/solr/d1-cn-index/conf/schema.xml /usr/share/solr/d1-cn-index/schema.xml.bak
-cp /usr/share/dataone-cn-index/debian/index-solr-schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml
+mkdir  /etc/dataone/index/solr
+
+mv /usr/share/solr/d1-cn-index/conf/schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml.bak
+cp /usr/share/dataone-cn-index/debian/index-solr-schema.xml /etc/dataone/index/solr/schema.xml
+
+ln -s /etc/dataone/index/solr/schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml
+
 chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/conf/schema.xml
+chown -R tomcat6.tomcat6 /etc/dataone/index/solr
 
 /etc/init.d/tomcat6 start
 

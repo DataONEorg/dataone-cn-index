@@ -79,7 +79,8 @@ lexicographic ordering isn't equal to the numeric ordering) -->
         <!-- Standard analyzer commonly used by Lucene developers
         -->
         <!-- Standard analyzer commonly used by Lucene developers -->
-        <fieldtype name="text_lu" class="solr.TextField" positionIncrementGap="100">
+<!--
+         <fieldtype name="text_lu" class="solr.TextField" positionIncrementGap="100">
             <analyzer>
                 <tokenizer class="solr.StandardTokenizerFactory"/>
                 <filter class="solr.StandardFilterFactory"/>
@@ -87,7 +88,8 @@ lexicographic ordering isn't equal to the numeric ordering) -->
                 <filter class="solr.StopFilterFactory"/>
                 <filter class="solr.EnglishPorterFilterFactory"/>
             </analyzer>
-        </fieldtype>
+        </fieldtype> 
+-->
         <!-- One could also specify an existing Analyzer implementation in Java
              via the class attribute on the analyzer element:
         <fieldtype name="text_lu" class="solr.TextField">
@@ -102,33 +104,55 @@ lexicographic ordering isn't equal to the numeric ordering) -->
             </analyzer>
         </fieldtype>
 
-        <!-- A text field that uses WordDelimiterFilter to enable splitting and matching of
-words on case-change, alpha numeric boundaries, and non-alphanumeric chars
-so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
-Synonyms and stopwords are customized by external files, and stemming is enabled -->
         <fieldtype name="text" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <!-- in this example, we will only use synonyms at query time
-                <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
-                -->
-                <!--filter class="solr.WordDelimiterFilterFactory" generateWordParts="1"/-->
-                <filter class="solr.StopFilterFactory" ignoreCase="true"/>
+                
+                <filter class="solr.WordDelimiterFilterFactory" 
+                	generateWordParts="1"
+                	catenateWords="1"
+                	generateNumberParts="1"
+                	splitOnNumerics="0"/>
+                
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.StopFilterFactory" />
+                <filter class="solr.PorterStemFilterFactory" />
             </analyzer>
             <analyzer type="query">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <filter class="solr.StopFilterFactory" ignoreCase="true"/>
+                
+                <filter class="solr.WordDelimiterFilterFactory" 
+                	generateWordParts="1"
+                	catenateWords="0"
+                	generateNumberParts="1"
+                	splitOnNumerics="0"/>
+                
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.StopFilterFactory"/>
+                <filter class="solr.PorterStemFilterFactory" />
             </analyzer>
         </fieldtype>
 
-        <fieldtype name="text_all" class="solr.TextField" positionIncrementGap="100">
+        <fieldtype name="text_no_token" class="solr.TextField" positionIncrementGap="100">
+            <analyzer type="index">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>    
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.StopFilterFactory" />
+            </analyzer>
+            <analyzer type="query">
+                <tokenizer class="solr.WhitespaceTokenizerFactory"/>                
+                <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.StopFilterFactory"/>
+            </analyzer>
+        </fieldtype>
+
+<!--
+         <fieldtype name="text_all" class="solr.TextField" positionIncrementGap="100">
             <analyzer type="index">
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-                <!-- in this example, we will only use synonyms at query time
+                in this example, we will only use synonyms at query time
                 <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
-                -->
+               
                 <filter class="solr.StopFilterFactory" ignoreCase="true"/>
                 <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
                         catenateWords="1" catenateNumbers="1" catenateAll="0"/>
@@ -145,10 +169,11 @@ Synonyms and stopwords are customized by external files, and stemming is enabled
                 <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
             </analyzer>
         </fieldtype>
+ -->
 
         <!-- Less flexible matching, but less false matches.  Probably not ideal for product names
 but may be good for SKUs.  Can insert dashes in the wrong place and still match. -->
-        <fieldtype name="textTight" class="solr.TextField" positionIncrementGap="100">
+         <fieldtype name="textTight" class="solr.TextField" positionIncrementGap="100">
             <analyzer>
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
                 <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
@@ -158,8 +183,7 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
                 <filter class="solr.LowerCaseFilterFactory"/>
                 <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
             </analyzer>
-        </fieldtype>
-
+        </fieldtype> 
     </types>
 
 
@@ -176,23 +200,23 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         -->
 
         <field name="id"              type="string"   indexed="true" stored="true" multiValued="false"/>
-        <field name="objectformat"    type="string"   indexed="true" stored="true" multiValued="false"/>
-        <field name="size"            type="long"     indexed="true" stored="true" multiValued="false"/>
-        <field name="checksum"        type="string"   indexed="true" stored="true" multiValued="false"/>
-        <field name="checksumAlgorithm" type="string" indexed="true" stored="true"/>
+        <field name="objectformat"    type="string"   indexed="false" stored="true" multiValued="false"/>
+        <field name="size"            type="long"     indexed="false" stored="true" multiValued="false"/>
+        <field name="checksum"        type="string"   indexed="false" stored="true" multiValued="false"/>
+        <field name="checksumAlgorithm" type="string" indexed="false" stored="true"/>
         <field name="submitter"       type="string"   indexed="true" stored="true" multiValued="false"/>
         <field name="rightsholder"    type="string"   indexed="true" stored="true" multiValued="false"/>
-        <field name="rep_allowed"     type="boolean"  indexed="true" stored="true" multiValued="false"/>
-        <field name="n_replicas"      type="integer"  indexed="true" stored="true" multiValued="false"/>
-        <field name="pref_rep_mn"     type="string"   indexed="true" stored="true" multiValued="true"/>
-        <field name="blocked_rep_mn"  type="string"   indexed="true" stored="true" multiValued="true"/>
-        <field name="obsoletes"       type="string"   indexed="true" stored="true" multiValued="false"/>
+        <field name="rep_allowed"     type="boolean"  indexed="false" stored="true" multiValued="false"/>
+        <field name="n_replicas"      type="integer"  indexed="false" stored="true" multiValued="false"/>
+        <field name="pref_rep_mn"     type="string"   indexed="false" stored="true" multiValued="true"/>
+        <field name="blocked_rep_mn"  type="string"   indexed="false" stored="true" multiValued="true"/>
+        <field name="obsoletes"       type="string"   indexed="false" stored="true" multiValued="false"/>
         <field name="dateuploaded"    type="date"     indexed="true" stored="true" multiValued="false"/>
         <field name="datemodified"    type="date"     indexed="true" stored="true" multiValued="false"/>
         <field name="datasource"       type="string"  indexed="true" stored="true" multiValued="false"/>
-        <field name="auth_mn"         type="string"   indexed="true" stored="true" multiValued="false"/>
-        <field name="replica_mn"      type="string"   indexed="true" stored="true" multiValued="true"/>
-        <field name="replica_verified" type="date"    indexed="true" stored="true" multiValued="true"/>
+        <field name="auth_mn"         type="string"   indexed="false" stored="true" multiValued="false"/>
+        <field name="replica_mn"      type="string"   indexed="false" stored="true" multiValued="true"/>
+        <field name="replica_verified" type="date"    indexed="false" stored="true" multiValued="true"/>
 
         <!-- Object relationships -->
         <field name="resourcemap"		type="string"   indexed="true" stored="true" multiValued="true"/>
@@ -203,7 +227,7 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="readPermission"    type="string"   indexed="true" stored="true" multiValued="true"/>
         <field name="writePermission"   type="string"   indexed="true" stored="true" multiValued="true"/>
         <field name="changePermission"  type="string"   indexed="true" stored="true" multiValued="true"/>
-        <field name="isPublic"          type="boolean"  indexed="true" stored="false" />
+        <field name="isPublic"          type="boolean"  indexed="true" stored="true" />
         
         <!-- Science metadata properties -->
         <field name="abstract"                 type="text"      multiValued="false" indexed="true" stored="true" />
@@ -211,10 +235,10 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="author_lname"             type="string"    multiValued="true" indexed="true" stored="true" />
         <field name="keywords"                 type="string"    multiValued="true" indexed="true" stored="true" />
         <field name="keyConcept"               type="string"    multiValued="true" indexed="true" stored="true" />
-        <field name="southBoundCoord"          type="float"     multiValued="false" indexed="true" stored="true"/>
-        <field name="northBoundCoord"          type="float"     multiValued="false" indexed="true" stored="true"/>
-        <field name="westBoundCoord"           type="float"     multiValued="false" indexed="true" stored="true"/>
-        <field name="eastBoundCoord"           type="float"     multiValued="false" indexed="true" stored="true"/>
+        <field name="southBoundCoord"          type="sfloat"     multiValued="false" indexed="true" stored="true"/>
+        <field name="northBoundCoord"          type="sfloat"     multiValued="false" indexed="true" stored="true"/>
+        <field name="westBoundCoord"           type="sfloat"     multiValued="false" indexed="true" stored="true"/>
+        <field name="eastBoundCoord"           type="sfloat"     multiValued="false" indexed="true" stored="true"/>
         <field name="namedLocation"            type="string"    multiValued="true" indexed="true" stored="true" />
         <field name="beginDate"                type="date"      multiValued="false" indexed="true" stored="true" />
         <field name="endDate"                  type="date"      multiValued="false" indexed="true" stored="true" />
@@ -225,71 +249,69 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="datePublished"            type="date"      multiValued="false" indexed="true" stored="true" />
         <field name="pubDate" 				   type="date" 							indexed="true" stored="true"/>
 
-		<field name="investigator" type="string" indexed="true" stored="true" multiValued="true"/>
-		<field name="investigatorText" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="ogc_url" type="text" indexed="true" stored="true"/>
-        <field name="sku" type="textTight" indexed="true" stored="true"/>
-        <field name="identifier" type="textTight" indexed="true" stored="true"/>
-        <field name="LTERSite" type="string" indexed="true" stored="true"/>
-        <field name="origin" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="originText" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="titlestr" type="string" indexed="true" stored="true"/>
-        <field name="geoform" type="string" indexed="true" stored="true"/>
-        <field name="presentationCat" type="string" indexed="true" stored="true"/>
-        <field name="purpose" type="text" indexed="true" stored="true"/>
-        <field name="update_date" type="date" indexed="true" stored="true"/>
-        <field name="edition" type="text" indexed="true" stored="true"/>
-        <field name="data_url" type="string" indexed="true" stored="true"/>
-        <field name="originator" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="originatorText" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="family" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="species" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="genus" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="kingdom" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="phylum" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="order" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="class" type="string" indexed="true" stored="true" multiValued="true"/>
+		<field name="investigator" 		type="string" 	indexed="true" stored="true" multiValued="true"/>
+		<field name="investigatorText" 	type="text" 	indexed="true" stored="false" multiValued="true"/>
+        <field name="ogc_url" 			type="text" 	indexed="false" stored="true"/>
+        <field name="sku" 				type="textTight" indexed="true" stored="true"/>
+        <field name="identifier" 		type="textTight" indexed="true" stored="true"/>
+        <field name="LTERSite"	 		type="string" 	indexed="true" stored="true"/>
+        <field name="origin" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="originText" 		type="text" 	indexed="true" stored="false" multiValued="true"/>
+        <field name="titlestr" 			type="string" 	indexed="true" stored="false"/>
+        <field name="geoform" 			type="string" 	indexed="true" stored="true"/>
+        <field name="presentationCat" 	type="string" 	indexed="true" stored="true"/>
+        <field name="purpose" 			type="text" 	indexed="true" stored="true"/>
+        <field name="update_date" 		type="date" 	indexed="true" stored="true"/>
+        <field name="edition" 			type="text" 	indexed="true" stored="true"/>
+        <field name="data_url" 			type="string" 	indexed="false" stored="true"/>
+        <field name="originator" 		type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="originatorText" 	type="text"	  	indexed="true" stored="false" multiValued="true"/>
+        <field name="family" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="species" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="genus" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="kingdom" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="phylum" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="order" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="class" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
 
-        <field name="web_url" type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="web_url" 			type="string" 	indexed="false" stored="true" multiValued="true"/>
 
-        <field name="contactOrganization" type="text" indexed="true" stored="true"/>
+        <field name="contactOrganization" 		type="string" indexed="true" stored="true" multiValued="true"/>
+        <field name="contactOrganizationText" 	type="text"   indexed="true" stored="false" multiValued="true"/>
 
-        <field name="keywordsText" type="text" indexed="true" stored="true" multiValued="true"/>
-        <field name="placeKey" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="keywordsText" 		type="text" 	indexed="true" stored="false" multiValued="true"/>
+        <field name="placeKey" 			type="text" 	indexed="true" stored="true" multiValued="true"/>
 
-        <field name="noBoundingBox" type="string" indexed="true" stored="true"/>
-        <field name="isSpatial" type="string" indexed="true" stored="true"/>
+        <field name="noBoundingBox" 	type="string" 	indexed="true" stored="true"/>
+        <field name="isSpatial" 		type="string" 	indexed="true" stored="true"/>
 
-        <field name="decade" type="string" indexed="true" stored="true"/>
-        <field name="gcmdKeyword" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="decade" 			type="string" 	indexed="true" stored="true"/>
+        <field name="gcmdKeyword" 		type="text" 	indexed="true" stored="true" multiValued="true"/>
 
         <!-- these are ornl daac fields, may not be populated for nbii, but are required to be here for indexing purpose-->
-        <field name="project" type="string" indexed="true" stored="true"/>
-        <field name="projectText" type="text" indexed="true" stored="true"/>
+        <field name="project" 			type="string" 	indexed="true" stored="true"/>
+        <field name="projectText" 		type="text" 	indexed="true" stored="false"/>
 
-        <field name="site" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="siteText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="site" 				type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="siteText" 			type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="parameter" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="parameterText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="parameter" 		type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="parameterText"		type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="sensor" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="sensorText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="sensor" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="sensorText" 		type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="source" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="sourceText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="source" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="sourceText" 		type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="term" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="termText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="term" 				type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="termText" 			type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="topic" type="string" indexed="true" stored="true" multiValued="true"/>
-        <field name="topicText" type="text" indexed="true" stored="true" multiValued="true"/>
+        <field name="topic" 			type="string" 	indexed="true" stored="true" multiValued="true"/>
+        <field name="topicText" 		type="text" 	indexed="true" stored="false" multiValued="true"/>
 
-        <field name="fileID" type="string" indexed="true" stored="true"/>
-
-        <field name="fullText"                 type="text"      multiValued="true" indexed="true" stored="false" />
-        <field name="text"					   type="text"      multiValued="true"	indexed="true" stored="true" />
-   
+        <field name="fileID" 			type="string" 	indexed="true" stored="true"/>
+   		<field name="text"       		type="text"  	indexed="true" stored="true" multiValued="false"/>
 <!-- ======================================================================= -->
         <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
 will be used if the name matches any of the patterns.
@@ -327,21 +349,35 @@ ways, or to add multiple fields to the same field for easier/faster searching.  
     <copyField source="id" dest="identifier"/>
     <copyfield source="replica_mn" dest="datasource" />
 
-    <copyField source="title" dest="fullText"/>
-    <copyField source="title" dest="text"/>
     <copyField source="title" dest="titlestr"/>
 
     <copyField source="origin" dest="originText"/>
     <copyField source="origin" dest="originatorText"/>
+    
+    <copyField source="project" dest="projectText"/>
+    
+    <copyField source="site" dest="siteText"/>
+    <copyField source="parameter" dest="parameterText"/>
+    <copyField source="sensor" dest="sensorText"/>
+    <copyField source="source" dest="sourceText"/>
+    <copyField source="term" dest="termText"/>
+    <copyField source="topic" dest="topicText"/>
+    <copyField source="investigator" dest="investigatorText"/>
+    <copyField source="keywords" dest="keywordsText"/>
+    <copyField source="pubDate" dest="datePublished" />
+    <copyField source="dateuploaded" dest="update_date" />
+    <copyField source="contactOrganization" dest="contactOrganizationText"/>
+  
+<!--     
+    <copyField source="title" dest="fullText"/>
+    <copyField source="title" dest="text"/>
+    
     <copyField source="origin" dest="fullText"/>
     <copyField source="origin" dest="text"/>
 
     <copyField source="contactOrganization" dest="fullText"/>
     <copyField source="contactOrganization" dest="text"/>
 
-    <copyField source="datasource" dest="fullText"/>
-    <copyField source="datasource" dest="text"/>
-    
     <copyField source="LTERSite" dest="fullText"/>
     <copyField source="LTERSite" dest="text"/>
     
@@ -363,53 +399,36 @@ ways, or to add multiple fields to the same field for easier/faster searching.  
     <copyField source="gcmdKeyword" dest="fullText"/>
     <copyField source="gcmdKeyword" dest="text"/>
 
-    <!--
-    these are ornldaac related fields, but need to be here for indexing purpose
-    -->
-    <copyField source="project" dest="projectText"/>
     <copyField source="projectText" dest="fullText"/>
     <copyField source="projectText" dest="text"/>
-
-    <copyField source="site" dest="siteText"/>
+    
     <copyField source="site" dest="fullText"/>
     <copyField source="site" dest="text"/>
 
-    <copyField source="parameter" dest="parameterText"/>
     <copyField source="parameter" dest="fullText"/>
     <copyField source="parameter" dest="text"/>
 
-    <copyField source="sensor" dest="sensorText"/>
     <copyField source="sensor" dest="fullText"/>
     <copyField source="sensor" dest="text"/>
 
-    <copyField source="source" dest="sourceText"/>
     <copyField source="source" dest="fullText"/>
     <copyField source="source" dest="text"/>
 
-    <copyField source="term" dest="termText"/>
     <copyField source="term" dest="fullText"/>
     <copyField source="term" dest="text"/>
 
-    <copyField source="topic" dest="topicText"/>
     <copyField source="topic" dest="fullText"/>
     <copyField source="topic" dest="text"/>
 
-    <copyField source="investigator" dest="investigatorText"/>
     <copyField source="investigator" dest="fullText"/>
     <copyField source="investigator" dest="text"/>
 
-    <copyField source="keywords" dest="keywordsText"/>
     <copyField source="keywords" dest="fullText"/>
 	<copyField source="keywords" dest="text"/>
 
     <copyField source="abstract" dest="fullText" />
     <copyField source="abstract" dest="text" />
-    
-    <copyField source="fileID" dest="fullText"/>
-    <copyField source="fileID" dest="text"/>
-
-    <copyField source="pubDate" dest="datePublished" />
-    <copyField source="dateuploaded" dest="update_date" />
+  -->   
     <!-- end dataone copy fields -->
 
     <!-- Similarity is the scoring routine for each document vs a query.

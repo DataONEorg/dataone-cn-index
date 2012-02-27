@@ -89,14 +89,17 @@ cp /usr/share/dataone-cn-index/debian/index-solr-schema.xml /etc/dataone/index/s
 
 ln -s /etc/dataone/index/solr/schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml
 
-chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/conf/schema.xml
+cp /usr/share/dataone-cn-index/debian/d1search.xsl /etc/dataone/index/solr/
+ln -s /etc/dataone/index/solr/d1search.xsl /usr/share/solr/d1-cn-index/conf/xslt/d1search.xsl
+
 chown -R tomcat6.tomcat6 /etc/dataone/index/solr
+chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/
 
 /etc/init.d/tomcat6 start
 
 ######### Finished! inform user how to start daemons
 echo ""
-echo "Build or re-build Solr Index with /usr/share/dataone-cn-index/d1_index_build_tool.jar while index task generator and processor are not running."
+echo "Build or re-build Solr Index with /usr/share/dataone-cn-index/d1_index_build_tool.jar while index task processor daemon is not running."
 echo "Start Index Task Generator with /etc/init.d/d1-index-task-generator start"
 echo "Start Index Task Processor with /etc/init.d/d1-index-task-processor start"
 

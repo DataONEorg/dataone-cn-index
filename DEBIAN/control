@@ -1,5 +1,5 @@
 Package: dataone-cn-index
-Version: 0.0.3
+Version: 1.0.0-RC3~unstable
 Section: utils
 Priority: optional
 Architecture: all

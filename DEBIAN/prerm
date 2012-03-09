@@ -40,16 +40,6 @@ su ${PG_USER} -c "dropdb ${INDEX_DB}"
 echo "Droping index task database user indexer"
 su ${PG_USER} -c "psql --command \"DROP USER ${INDEX_DB_USER}\""
 
-##pg_hba.conf was modified, we should probably return it to original
-if [ -f ${PG_CONF}/pg_hba.conf.bak.index ]
-then
-  rm -f ${PG_CONF}/pg_hba.conf
-  mv ${PG_CONF}/pg_hba.conf.bak.index ${PG_CONF}/pg_hba.conf
-  chown ${PG_USER} ${PG_CONF}/pg_hba.conf
-  chgrp ${PG_USER} ${PG_CONF}/pg_hba.conf
-fi
-
-
 ## Restart the postgres db
 echo "Restarting postgres database"
 /etc/init.d/${PG} restart

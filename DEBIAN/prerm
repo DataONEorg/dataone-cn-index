@@ -48,3 +48,6 @@ echo "Restarting postgres database"
 /etc/init.d/tomcat6 stop
 mv /usr/share/solr/d1-cn-index/conf/schema.xml.bak /usr/share/solr/d1-cn-index/schema.xml
 /etc/init.d/tomcat6 start
+
+## Update DateONE Version Info Doc
+java -jar /usr/share/dataone-cn-version-tool/dataone-cn-version-tool.jar -F/usr/share/dataone-cn-version-tool/version-tool.properties -html > /var/www/cn-version.html

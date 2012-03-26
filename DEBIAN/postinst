@@ -23,6 +23,10 @@ cp /usr/share/dataone-cn-index/debian/index-generation-context/application-conte
 cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-resourcemap.xml /etc/dataone/index/index-generation-context
 cp /usr/share/dataone-cn-index/debian/index-generation-context/application-context-systemmeta100.xml /etc/dataone/index/index-generation-context
 
+/usr/share/dataone-cn-index/debian/index-generation-context/application-context-fgdc-base.xml /etc/dataone/index/index-generation-context
+/usr/share/dataone-cn-index/debian/index-generation-context/application-context-fgdc-std-001-1998.xml /etc/dataone/index/index-generation-context
+/usr/share/dataone-cn-index/debian/index-generation-context/application-context-fgdc-std-0011-1999.xml /etc/dataone/index/index-generation-context
+/usr/share/dataone-cn-index/debian/index-generation-context/application-context-fgdc-std-0012-1999.xml /etc/dataone/index/index-generation-context
 
 chown -R tomcat6.tomcat6 /etc/dataone/index
 

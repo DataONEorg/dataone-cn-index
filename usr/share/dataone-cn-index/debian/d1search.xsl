@@ -47,9 +47,9 @@
   <xsl:template match="doc">
     <objectInfo>
       <identifier><xsl:value-of select="str[@name='id']"/></identifier>
-      <formatId><xsl:value-of select="str[@name='objectformat']"/></formatId>
+      <formatId><xsl:value-of select="str[@name='formatId']"/></formatId>
       <checksum><xsl:attribute name="algorithm"><xsl:value-of select="str[@name='checksumAlgorithm']"/></xsl:attribute><xsl:value-of select="str[@name='checksum']"/></checksum>
-      <dateSysMetadataModified><xsl:value-of select="date[@name='datemodified']"/></dateSysMetadataModified>
+      <dateSysMetadataModified><xsl:value-of select="date[@name='dateModified']"/></dateSysMetadataModified>
       <size><xsl:value-of select="long[@name='size']"/></size>
     </objectInfo>
   </xsl:template>

@@ -65,8 +65,6 @@ echo "Restarting postgres database"
 /etc/init.d/${PG} restart
 ######################################################
 
-#open up the correct port for hazelcast
-ufw allow 5702
 
 
 ######## Update solr index schema

@@ -110,7 +110,7 @@ case  $1  in
 			cd "$JVM_TMP"
 		
 			$DAEMON -home "$JAVA_HOME" -cp "$CLASSPATH" \
-			-debug -outfile "$OUTPUT_FILE" \
+			-debug \
 			-errfile "$ERROR_FILE" \
 			-pidfile "$RUN_PID" -user "$USER_NAME" \
 			$JAVA_OPTS "$BOOTSTRAP_CLASS"

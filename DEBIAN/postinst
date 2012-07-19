@@ -66,30 +66,70 @@ echo "Restarting postgres database"
 ######################################################
 
 
-
-######## Update solr index schema
 /etc/init.d/tomcat6 stop
 
-mkdir  /etc/dataone/index/solr
+if [ ! -d "/etc/dataone/index/solr"]; then
+  mkdir  /etc/dataone/index/solr
+  chown -R tomcat6.tomcat6 /etc/dataone/index/solr
+fi
 
-mv /usr/share/solr/d1-cn-index/conf/schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml.bak
-cp /usr/share/dataone-cn-index/debian/index-solr-schema.xml /etc/dataone/index/solr/schema.xml
 
-ln -s /etc/dataone/index/solr/schema.xml /usr/share/solr/d1-cn-index/conf/schema.xml
+##UPDATE FOR MIGRATION...
 
+if [ ! -f "/etc/dataone/index/solr/schema.properties"]; then
+  ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
+  CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
+else
+  CORE_NAME="d1-cn-index"
+fi
+
+if [! -f "/usr/share/dataone-cn-index/schema.properties"]; then
+  NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
+else
+  NEW_SCHEMA_FILE="index-solr-schema.xml"
+fi
+
+cp /usr/share/dataone-cn-index/$NEW_SCHEMA_FILE /etc/dataone/index/solr/
 cp /usr/share/dataone-cn-index/debian/d1search.xsl /etc/dataone/index/solr/
-ln -s /etc/dataone/index/solr/d1search.xsl /usr/share/solr/d1-cn-index/conf/xslt/d1search.xsl
+ln -fs /etc/dataone/index/solr/d1search.xsl /usr/share/solr/$CORE_NAME/conf/xslt/d1search.xsl
 
-chown -R tomcat6.tomcat6 /etc/dataone/index/solr
+if [ ! -f "/etc/dataone/index/solr/schema.xml" ] && [ ! -f "/etc/dataone/index/solr/schema-current.xml" ]; then
+	# fresh install
+  ln -s /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
+  ln -s /etc/dataone/index/solr/$NEW_SCHEMA_FILE /usr/share/solr/$CORE_NAME/conf/schema.xml
+elif [ "$ORIGINAL_SCHEMA_FILE" != "$NEW_SCHEMA_FILE" ]; then
+  # upgrade
+  if [ -z "$ORIGINAL_SCHEMA_FILE" ]; then
+    # first upgrade to versioned schemas
+    ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/solr/schema-current.xml
+  fi
+  SCHEMA_UPDATE="true"
+fi
+
+cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema.properties
+
+##########################
 chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/
 
 /etc/init.d/tomcat6 start
 
 ######### Finished! inform user how to start daemons
 echo ""
-echo "Build or re-build Solr Index with /usr/share/dataone-cn-index/d1_index_build_tool.jar while index task processor daemon is not running."
+echo "CN Search Index has finished installing. "
+echo "To build or re-build Solr Index with /usr/share/dataone-cn-index/d1_index_build_tool.jar " 
+echo "while index task processor daemon is not running. "
+echo "You can do this using /usr/share/dataone-cn-index/scripts/index-tool.sh for example."
+echo ""
 echo "Start Index Task Generator with /etc/init.d/d1-index-task-generator start"
 echo "Start Index Task Processor with /etc/init.d/d1-index-task-processor start"
+
+if [ -z "$SCHEMA_UPDATE" ]; then
+  echo ""
+  echo "The search index schema has been updated. "
+  echo "Before starting the index-task-processsor, "
+  echo "the search index must be migrated."
+  echo "Use: /usr/share/dataone-cn-index/scripts/migrate-search-index.sh"
+fi
 
 ## Update DateONE Version Info Doc
 java -jar /usr/share/dataone-cn-version-tool/dataone-cn-version-tool.jar -F/usr/share/dataone-cn-version-tool/version-tool.properties -html > /var/www/cn-version.html

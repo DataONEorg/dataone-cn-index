@@ -94,8 +94,8 @@ ln -fs /etc/dataone/index/solr/d1search.xsl /usr/share/solr/$CORE_NAME/conf/xslt
 
 if [ ! -f "/etc/dataone/index/solr/schema.xml" ] && [ ! -f "/etc/dataone/index/solr/schema-current.xml" ]; then
 	# fresh install
-  ln -s /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
-  ln -s /etc/dataone/index/solr/$NEW_SCHEMA_FILE /usr/share/solr/$CORE_NAME/conf/schema.xml
+  ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
+  ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /usr/share/solr/$CORE_NAME/conf/schema.xml
 elif [ "$ORIGINAL_SCHEMA_FILE" != "$NEW_SCHEMA_FILE" ]; then
   # upgrade
   if [ -z "$ORIGINAL_SCHEMA_FILE" ]; then

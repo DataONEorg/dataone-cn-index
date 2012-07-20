@@ -16,8 +16,14 @@ update-rc.d -f d1-index-task-processor remove
 rm -f /etc/init.d/d1-index-task-processor
 
 ## clean up log and config directory
-rm -rf /etc/dataone/index
-rm -rf /var/log/dataone/index
+rm -rf /etc/dataone/index/index-generation-context
+rm -f /etc/dataone/index/solr/d1search.xsl
+rm -f /etc/dataone/index/jdbc.properties
+rm -f /etc/dataone/index/log4j-generator.properties
+rm -f /etc/dataone/index/log4j-processor.properties
+rm -f /etc/dataone/index/solr.properties
+
+#rm -rf /var/log/dataone/index
 
 rm -f /var/run/d1-index-task-generator.pid
 rm -f /var/run/d1-index-task-processor.pid

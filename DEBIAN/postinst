@@ -24,7 +24,9 @@ chown -R tomcat6.tomcat6 /usr/share/java/d1_index_task_generator_daemon.jar
 chown -R tomcat6.tomcat6 /usr/share/java/d1_index_task_processor_daemon.jar
 chown -R tomcat6.tomcat6 /usr/share/java/d1_index_build_tool.jar
 
-mkdir  /var/log/dataone/index
+if [ ! -d "/var/log/dataone/index" ]; then
+  mkdir  /var/log/dataone/index
+fi
 chown tomcat6.tomcat6 /var/log/dataone/index
 
 

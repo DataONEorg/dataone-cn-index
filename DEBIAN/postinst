@@ -72,9 +72,6 @@ if [ ! -d "/etc/dataone/index/solr" ]; then
   mkdir  /etc/dataone/index/solr
 fi
 
-
-##UPDATE FOR MIGRATION...
-
 if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
   CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
@@ -85,14 +82,14 @@ fi
 if [ -f "/usr/share/dataone-cn-index/schema.properties" ]; then
   NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
 else
-  NEW_SCHEMA_FILE="index-solr-schema.xml"
+  NEW_SCHEMA_FILE="index-solr-schema-v1.xml"
 fi
 
 cp /usr/share/dataone-cn-index/$NEW_SCHEMA_FILE /etc/dataone/index/solr/
 cp /usr/share/dataone-cn-index/debian/d1search.xsl /etc/dataone/index/solr/
 ln -fs /etc/dataone/index/solr/d1search.xsl /usr/share/solr/$CORE_NAME/conf/xslt/d1search.xsl
 
-if [ ! -f "/etc/dataone/index/solr/schema.xml" ] && [ ! -f "/etc/dataone/index/solr/schema-current.xml" ]; then
+if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
 	# fresh install
   ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
   ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /usr/share/solr/$CORE_NAME/conf/schema.xml
@@ -100,7 +97,7 @@ elif [ "$ORIGINAL_SCHEMA_FILE" != "$NEW_SCHEMA_FILE" ]; then
   # upgrade
   if [ -z "$ORIGINAL_SCHEMA_FILE" ]; then
     # first upgrade to versioned schemas
-    ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/solr/schema-current.xml
+    ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
   fi
   SCHEMA_UPDATE="true"
 fi

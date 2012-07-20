@@ -30,7 +30,10 @@ if [ -z "$NEXT_SCHEMA_FILE" ] || [ -z "$NEXT_CORE_NAME" ]; then
 fi
 
 echo "Target core name: ${NEXT_CORE_NAME} and schema: ${NEXT_SCHEMA_NAME}."
-echo "Press enter to continue with swap."
+echo ""
+echo "This script needs root permission to run!"
+echo ""
+echo "Press enter to continue with swap or ctrl-c to exit."
 read key_stroke
 
 echo "Stopping index-task-processor daemon"

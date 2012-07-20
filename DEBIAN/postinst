@@ -75,14 +75,14 @@ fi
 
 ##UPDATE FOR MIGRATION...
 
-if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
+if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
   CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
 else
   CORE_NAME="d1-cn-index"
 fi
 
-if [! -f "/usr/share/dataone-cn-index/schema.properties" ]; then
+if [ -f "/usr/share/dataone-cn-index/schema.properties" ]; then
   NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
 else
   NEW_SCHEMA_FILE="index-solr-schema.xml"
@@ -123,7 +123,7 @@ echo ""
 echo "Start Index Task Generator with /etc/init.d/d1-index-task-generator start"
 echo "Start Index Task Processor with /etc/init.d/d1-index-task-processor start"
 
-if [ -z "$SCHEMA_UPDATE" ]; then
+if [ -n "$SCHEMA_UPDATE" ]; then
   echo ""
   echo "The search index schema has been updated. "
   echo "Before starting the index-task-processsor, "

@@ -68,22 +68,21 @@ echo "Restarting postgres database"
 
 /etc/init.d/tomcat6 stop
 
-if [ ! -d "/etc/dataone/index/solr"]; then
+if [ ! -d "/etc/dataone/index/solr" ]; then
   mkdir  /etc/dataone/index/solr
-  chown -R tomcat6.tomcat6 /etc/dataone/index/solr
 fi
 
 
 ##UPDATE FOR MIGRATION...
 
-if [ ! -f "/etc/dataone/index/solr/schema.properties"]; then
+if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
   CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
 else
   CORE_NAME="d1-cn-index"
 fi
 
-if [! -f "/usr/share/dataone-cn-index/schema.properties"]; then
+if [! -f "/usr/share/dataone-cn-index/schema.properties" ]; then
   NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
 else
   NEW_SCHEMA_FILE="index-solr-schema.xml"
@@ -110,6 +109,7 @@ cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema.
 
 ##########################
 chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/
+chown -R tomcat6.tomcat6 /etc/dataone/index/solr
 
 /etc/init.d/tomcat6 start
 

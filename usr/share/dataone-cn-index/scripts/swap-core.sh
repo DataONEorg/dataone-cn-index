@@ -11,7 +11,7 @@ else
   name2=$2
 fi
 
-if [ ! -d /var/lib/solr/data/$name1 ] || [ $name2 = "" ]; then
+if [ ! -d "/var/lib/solr/data/$name1" ] || [ -z "$name2" ]; then
   echo "Core doesn't exist"
   exit
 fi

@@ -29,7 +29,7 @@ if [ -z "$NEXT_SCHEMA_FILE" ] || [ -z "$NEXT_CORE_NAME" ]; then
 	exit
 fi
 
-echo "Target core name: ${NEXT_CORE_NAME} and schema: ${NEXT_SCHEMA_NAME}."
+echo "Target core name: ${NEXT_CORE_NAME} and schema: ${NEXT_SCHEMA_FILE}."
 echo ""
 echo "This script needs root permission to run!"
 echo ""
@@ -37,14 +37,17 @@ echo "Press enter to continue with swap or ctrl-c to exit."
 read key_stroke
 
 echo "Stopping index-task-processor daemon"
-/etc/init.d/d1-cn-index-/etc/init.d/d1-index-task-processor stop
+/etc/init.d/d1-index-task-processor stop
 
 echo "Creating core: ${NEXT_CORE_NAME}"
 $SOLR_SCRIPT_DIR/create-core.sh $NEXT_CORE_NAME
 
 echo "Configuring core with new schema and d1search.xsl"
-ln -s /etc/dataone/index/solr/$NEXT_SCHEMA_NAME /usr/share/solr/$NEXT_CORE_NAME/conf/schema.xml
-ln -s /etc/dataone/index/solr/d1search.xsl /usr/share/solr/$NEXT_CORE_NAME/conf/xslt/d1search.xsl
+ln -fs /etc/dataone/index/solr/$NEXT_SCHEMA_FILE /usr/share/solr/$NEXT_CORE_NAME/conf/schema.xml
+ln -fs /etc/dataone/index/solr/d1search.xsl /usr/share/solr/$NEXT_CORE_NAME/conf/xslt/d1search.xsl
+
+echo "Reloading core"
+$SOLR_SCRIPT_DIR/reload-core.sh $NEXT_CORE_NAME
 
 echo "Updating solr-next.properties with new core name"
 cp /usr/share/dataone-cn-index/solr-template.properties /etc/dataone/index/solr-next.properties
@@ -55,7 +58,7 @@ java -jar /usr/share/dataone-cn-index/d1_index_build_tool.jar -a -migrate
 
 echo "Swapping new core into live core"
 $SOLR_SCRIPT_DIR/swap-core.sh $BASE_CORE_NAME $NEXT_CORE_NAME
-ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/solr/schema-current.xml
+ln -fs /etc/dataone/index/solr/$NEXT_SCHEMA_FILE /etc/dataone/index/solr/schema-current.xml
 
 echo "Starting index processor daemon"
 /etc/init.d/d1-index-task-processor start

@@ -24,7 +24,7 @@ else
  name=$1
 fi
 
-if [ ! -d /var/lib/solr/data/"$name" ] || [ -z "$name" ]; then
+if [ ! -d "/var/lib/solr/data/$name" ] || [ -z "$name" ]; then
  echo "Core doesn't exist $name"
  echo "You also may need root permission to run this script."
  exit

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Migrate the solr search index to the next version.
-#
-# User supplies new version number.
+#   configured by CONFIG_LOCATION
 # 1. Stop index-processor. (Leave generator running)
 # 2. Create new core.
 # 3. Create link to xslt in /etc/dataone/index/solr/d1search.xsl (ABSOLUTE PATHS)
@@ -12,17 +11,23 @@
 # 7. Swap current/live core with new, next version core.
 # 8. Start index-processor. 
 
-if [ -z "$1" ]; then
-	echo -n "Target migration version number: "
-	read version
-else
-	version=$1
+CONFIG_LOCATION="/etc/dataone/index/solr/schema.properties"
+SOLR_SCRIPT_DIR="/usr/share/dataone-cn-index/scripts"
+BASE_CORE_NAME="d1-cn-index"
+
+if [ -f "$CONFIG_LOCATION" ]; then
+	NEXT_CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' $CONFIG_LOCATION`
+	NEXT_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' $CONFIG_LOCATION`
 fi
 
-SOLR_SCRIPT_DIR = "/usr/share/dataone-cn-index/scripts"
-BASE_CORE_NAME="d1-cn-index"
-NEXT_CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
-NEXT_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
+if [ -z "$NEXT_SCHEMA_FILE" ] || [ -z "$NEXT_CORE_NAME" ]; then
+	echo "Must specify core-name and schema-file in $CONFIG_LOCATION"
+	echo "schema-file is just file name, will be rooted from /etc/dataone/index/solr automatically."
+	echo "For example: "
+	echo "schema-file=solr-index-schema-v2.xml"
+	echo "core-name=d1-cn-index-v2"
+	exit
+fi
 
 echo "Target core name: ${NEXT_CORE_NAME} and schema: ${NEXT_SCHEMA_NAME}."
 echo "Press enter to continue with swap."

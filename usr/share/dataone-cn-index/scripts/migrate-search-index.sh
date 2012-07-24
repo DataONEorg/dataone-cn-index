@@ -11,7 +11,7 @@
 # 7. Swap current/live core with new, next version core.
 # 8. Start index-processor. 
 
-CONFIG_LOCATION="/etc/dataone/index/solr/schema.properties"
+CONFIG_LOCATION="/etc/dataone/index/solr/schema-next.properties"
 SOLR_SCRIPT_DIR="/usr/share/dataone-cn-index/scripts"
 BASE_CORE_NAME="d1-cn-index"
 
@@ -58,11 +58,13 @@ java -jar /usr/share/dataone-cn-index/d1_index_build_tool.jar -a -migrate
 
 echo "Swapping new core into live core"
 $SOLR_SCRIPT_DIR/swap-core.sh $BASE_CORE_NAME $NEXT_CORE_NAME
+
 ln -fs /etc/dataone/index/solr/$NEXT_SCHEMA_FILE /etc/dataone/index/solr/schema-current.xml
+mv /etc/dataone/index/solr/schema.properties /etc/dataone/index/solr/schema-prev.properties
+mv /etc/dataone/index/solr/schema-next.properties /etc/dataone/index/solr/schema.properties
 
 echo "Starting index processor daemon"
 /etc/init.d/d1-index-task-processor start
 
 echo "Once the new index is verified, the old core can be removed"
 echo "using: ${SOLR_SCRIPT_DIR}/remove-core.sh"
-

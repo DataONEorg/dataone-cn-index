@@ -119,7 +119,11 @@ elif [ "$ORIGINAL_SCHEMA_FILE" != "$NEW_SCHEMA_FILE" ]; then
   SCHEMA_UPDATE="true"
 fi
 
-cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema.properties
+if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
+  cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema.properties
+else
+  cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema-next.properties
+fi
 
 ##########################
 chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/

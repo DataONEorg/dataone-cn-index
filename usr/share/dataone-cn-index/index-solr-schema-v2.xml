@@ -12,7 +12,7 @@ The Solr schema file. This file should be named "schema.xml" and
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="dataone" version="2">
+<schema name="dataone" version="1.1">
     <types>
         <!-- field type definitions. The "name" attribute is
    just a label to be used by field definitions.  The "class"

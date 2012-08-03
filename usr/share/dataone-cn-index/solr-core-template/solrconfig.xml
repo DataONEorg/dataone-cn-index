@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
+
+	This solrconfig.xml is a template for search index solr cores.
+	It contains several modifications from the vanilla solrconfig.xml:
+	
+	1.) dataDir setting is configured with a substitution param CORENAME.
+	2.) The search requestHandler is configured to use a dataone class - SolrSearchHandler
+		which applies security filter through the fq solr parameter.  
+		Deployed by the dataone-cn-solr component.
+	3.) The XSLT Transform cache time has been increased from 5 to 7200 seconds.
+	
+	Based on dataone-cn-solr / d1-index-solrconfig.xml config.
+
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
@@ -706,7 +718,7 @@
        of SearchComponents (see below) and supports distributed
        queries across multiple shards
     -->
-  <requestHandler name="search" class="solr.SearchHandler" default="true">
+  <requestHandler name="search" class="org.dataone.solr.handler.component.SolrSearchHandler" default="true">
     <!-- default values for query parameters can be specified, these
          will be overridden by parameters in the request
       -->
@@ -1502,7 +1514,7 @@
        every xsltCacheLifetimeSeconds.  
     -->
   <queryResponseWriter name="xslt" class="solr.XSLTResponseWriter">
-    <int name="xsltCacheLifetimeSeconds">5</int>
+    <int name="xsltCacheLifetimeSeconds">7200</int>
   </queryResponseWriter>
 
   <!-- Query Parsers

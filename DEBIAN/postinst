@@ -14,6 +14,7 @@ cp /usr/share/dataone-cn-index/debian/log4j-generator.properties /etc/dataone/in
 cp /usr/share/dataone-cn-index/debian/log4j-processor.properties /etc/dataone/index/log4j-processor.properties
 cp /usr/share/dataone-cn-index/debian/jdbc.properties /etc/dataone/index/jdbc.properties
 cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.properties
+cp /usr/share/dataone-cn-index/queryFieldDescriptions.properties /etc/dataone/index/solr/queryFieldDescriptions.properties
 cp -rf /usr/share/dataone-cn-index/debian/index-generation-context /etc/dataone/index/
 
 chown -R tomcat6.tomcat6 /etc/dataone/index

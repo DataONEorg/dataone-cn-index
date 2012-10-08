@@ -87,7 +87,7 @@ fi
 if [ -f "/usr/share/dataone-cn-index/schema.properties" ]; then
   NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
 else
-  NEW_SCHEMA_FILE="index-solr-schema-v1.xml"
+  NEW_SCHEMA_FILE="index-solr-schema-v1_1.xml"
 fi
 
 if [ ! -f "/etc/dataone/index/solr/$NEW_SCHEMA_FILE" ]; then

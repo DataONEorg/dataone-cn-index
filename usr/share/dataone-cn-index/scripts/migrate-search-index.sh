@@ -56,12 +56,14 @@ sed -i "s/CORENAME/$NEXT_CORE_NAME/" /etc/dataone/index/solr-next.properties
 echo "Building new index.  This may take a while!"
 java -jar /usr/share/dataone-cn-index/d1_index_build_tool.jar -a -migrate
 
-echo "Swapping new core into live core"
-$SOLR_SCRIPT_DIR/swap-core.sh $BASE_CORE_NAME $NEXT_CORE_NAME
-
 ln -fs /etc/dataone/index/solr/$NEXT_SCHEMA_FILE /etc/dataone/index/schema-current.xml
 mv /etc/dataone/index/solr/schema.properties /etc/dataone/index/solr/schema-prev.properties
 mv /etc/dataone/index/solr/schema-next.properties /etc/dataone/index/solr/schema.properties
+
+$SOLR_SCRIPT_DIR/reload_core.sh $NEXT_CORE_NAME
+
+echo "Swapping new core into live core"
+$SOLR_SCRIPT_DIR/swap-core.sh $BASE_CORE_NAME $NEXT_CORE_NAME
 
 echo "Starting index processor daemon"
 /etc/init.d/d1-index-task-processor start

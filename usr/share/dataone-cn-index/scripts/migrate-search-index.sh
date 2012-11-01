@@ -60,7 +60,8 @@ ln -fs /etc/dataone/index/solr/$NEXT_SCHEMA_FILE /etc/dataone/index/schema-curre
 mv /etc/dataone/index/solr/schema.properties /etc/dataone/index/solr/schema-prev.properties
 mv /etc/dataone/index/solr/schema-next.properties /etc/dataone/index/solr/schema.properties
 
-$SOLR_SCRIPT_DIR/reload_core.sh $NEXT_CORE_NAME
+$SOLR_SCRIPT_DIR/reload-core.sh $NEXT_CORE_NAME
+$SOLR_SCRIPT_DIR/reload-core.sh $BASE_CORE_NAME
 
 echo "Swapping new core into live core"
 $SOLR_SCRIPT_DIR/swap-core.sh $BASE_CORE_NAME $NEXT_CORE_NAME

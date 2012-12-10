@@ -3,7 +3,7 @@ Version: 1.2.0
 Section: utils
 Priority: optional
 Architecture: all
-Depends: dataone-cn-os-core, dataone-cn-metacat, sun-java6-jdk, jsvc, postgresql, libcommons-daemon-java, dataone-cn-solr, dataone-cn-version-tool
+Depends: dataone-cn-os-core, dataone-cn-metacat, sun-java6-jdk, jsvc, postgresql, libcommons-daemon-java, dataone-cn-solr, dataone-cn-version-tool, curl
 Installed-Size: 1 kb
 Maintainer: Skye Roseboom <sroseboo@dataone.unm.edu>
 Description: This is a metapackage that installs the index components of the dataone coordinating node stack.  The index component handles updating the solr index data source with updates from the dataone system.  In this way the solr index is kept current with the CN's document index.  The index components are responsible for detecting updates to the system metadata objects on the local cn node, and to generate solr index update requests accordingly.

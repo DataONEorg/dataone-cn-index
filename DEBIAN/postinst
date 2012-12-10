@@ -9,6 +9,10 @@ if [ ! -d "/etc/dataone/index" ]; then
   mkdir /etc/dataone/index
 fi
 
+if [ ! -d "/etc/dataone/index/solr" ]; then
+  mkdir  /etc/dataone/index/solr
+fi
+
 #provide context properties files for postgres, log4j, solr location
 cp /usr/share/dataone-cn-index/debian/log4j-generator.properties /etc/dataone/index/log4j-generator.properties
 cp /usr/share/dataone-cn-index/debian/log4j-processor.properties /etc/dataone/index/log4j-processor.properties
@@ -72,10 +76,6 @@ echo "Restarting postgres database"
 
 
 /etc/init.d/tomcat6 stop
-
-if [ ! -d "/etc/dataone/index/solr" ]; then
-  mkdir  /etc/dataone/index/solr
-fi
 
 if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`

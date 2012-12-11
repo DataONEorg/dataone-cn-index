@@ -7,6 +7,7 @@ chmod +x /etc/init.d/d1-index-task-processor
 
 if [ ! -d "/etc/dataone/index" ]; then
   mkdir /etc/dataone/index
+  FRESH_INSTALL="true"
 fi
 
 if [ ! -d "/etc/dataone/index/solr" ]; then
@@ -104,20 +105,15 @@ if [ -d "/usr/share/solr/d1-cn-index" ]; then
   ln -fs /etc/dataone/index/solr/d1search.xsl /usr/share/solr/d1-cn-index/conf/xslt/d1search.xsl
 fi
 
-if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
-	# fresh install
+if [ -n "$FRESH_INSTALL" ]; then
   ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
   ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /usr/share/solr/$CORE_NAME/conf/schema.xml
 elif [ "$ORIGINAL_SCHEMA_FILE" != "$NEW_SCHEMA_FILE" ]; then
   # upgrade
-  if [ -z "$ORIGINAL_SCHEMA_FILE" ]; then
-    # first upgrade to versioned schemas
-    ln -fs /etc/dataone/index/solr/$NEW_SCHEMA_FILE /etc/dataone/index/schema-current.xml
-  fi
   SCHEMA_UPDATE="true"
 fi
 
-if [ ! -f "/etc/dataone/index/solr/schema.properties" ]; then
+if [ -n "$FRESH_INSTALL" ]; then
   cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema.properties
 else
   cp /usr/share/dataone-cn-index/schema.properties /etc/dataone/index/solr/schema-next.properties

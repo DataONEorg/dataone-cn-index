@@ -28,6 +28,7 @@
 		<ref bean="fgdc.family" />
 		<ref bean="fgdc.class" />
 		<ref bean="fgdc.origin" />
+		<ref bean="fgdc.scientificName" />
 		<ref bean="fgdc.placeKey" />
 		<ref bean="fgdc.pubDate" />
 		<ref bean="fgdc.purpose" />
@@ -39,6 +40,11 @@
 		<ref bean="fgdc.author"/>
 		<ref bean="fgdc.investigator" />
 		<ref bean="fgdc.site" />
+	    <ref bean="fgdc.attributeName" />
+	    <ref bean="fgdc.attributeLabel" />
+	    <ref bean="fgdc.attributeDescription" />
+	    <ref bean="fgdc.attributeUnit" />
+	    <ref bean="fgdc.attributeText" />
    </list>
   </property>
  </bean>

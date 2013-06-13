@@ -20,6 +20,7 @@
     <ref bean="eml.northBoundCoord" />
     <ref bean="eml.westBoundCoord" />
     <ref bean="eml.eastBoundCoord" />
+    <ref bean="eml.site" />
     <ref bean="eml.beginDate" />
     <ref bean="eml.endDate" />
     <ref bean="eml.pubDate" />
@@ -35,6 +36,12 @@
     <ref bean="eml.phylum" />
     <ref bean="eml.family" />
     <ref bean="eml.class" /> 
+    <ref bean="eml.scientificName" />
+    <ref bean="eml.attributeName" />
+    <ref bean="eml.attributeLabel" />
+    <ref bean="eml.attributeDescription" />
+    <ref bean="eml.attributeUnit" />
+    <ref bean="eml.attributeText" />
     <ref bean="eml.fileID" />
     <ref bean="eml.fullText" />
    </list>

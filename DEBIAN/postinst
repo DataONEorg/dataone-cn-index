@@ -82,18 +82,21 @@ if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
   CORE_NAME=`awk -F"=" '/core-name/{ print $2 }' /etc/dataone/index/solr/schema.properties`
 else
+	#default core name
   CORE_NAME="d1-cn-index"
 fi
 
 if [ -f "/usr/share/dataone-cn-index/schema.properties" ]; then
   NEW_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /usr/share/dataone-cn-index/schema.properties`
 else
+	#default schema
   NEW_SCHEMA_FILE="index-solr-schema-v1_1.xml"
 fi
 
-if [ ! -f "/etc/dataone/index/solr/$NEW_SCHEMA_FILE" ]; then
-  cp /usr/share/dataone-cn-index/$NEW_SCHEMA_FILE /etc/dataone/index/solr/
-fi
+#if [ ! -f "/etc/dataone/index/solr/$NEW_SCHEMA_FILE" ]; then
+## ALWAYS copy schema file
+cp /usr/share/dataone-cn-index/$NEW_SCHEMA_FILE /etc/dataone/index/solr/
+#fi
 
 cp /usr/share/dataone-cn-index/debian/d1search.xsl /etc/dataone/index/solr/
 

@@ -185,14 +185,12 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
             </analyzer>
         </fieldtype> 
 
-		<fieldType name="alphaOnlySort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+		<fieldType name="alphaOnlySort" class="solr.TextField">
 			<analyzer>
 				<tokenizer class="solr.KeywordTokenizerFactory"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
 				<filter class="solr.TrimFilterFactory"/>
-			<!--  
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^a-z])" replacement="" replace="all"/>
-			-->
 			</analyzer>
 		</fieldType>
 		
@@ -248,8 +246,8 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="author"				type="string"			multiValued="false"	indexed="true"	stored="true" />
         <field name="authorSurName"			type="string"			multiValued="false"	indexed="true"	stored="true" />
         <field name="authorGivenName"		type="string" 			multiValued="false"	indexed="true"	stored="true" />
-        <field name="authorSurNameSort"		type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="true" />
-        <field name="authorGivenNameSort"	type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="true" />
+        <field name="authorSurNameSort"		type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="false" />
+        <field name="authorGivenNameSort"	type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="false" />
         
         <field name="authorLastName"	type="string"	multiValued="true"	indexed="true" stored="true" />
         
@@ -375,9 +373,6 @@ ways, or to add multiple fields to the same field for easier/faster searching.  
 
     <copyField source="id" dest="sku"/>
     <copyField source="id" dest="identifier"/>
-
-	<copyfield source="authorSurName" dest="authorSurNameSort"/>
-	<copyfield source="authorGivenName" dest="authorGivenNameSort"/>
 
     <copyField source="title" dest="titlestr"/>
 

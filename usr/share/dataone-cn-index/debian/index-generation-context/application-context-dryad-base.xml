@@ -22,6 +22,13 @@
 			value="//dcterms:creator[1]/text()" />
 		<property name="multivalue" value="false" />
 	</bean>
+
+	<bean id="dryad.authorSurNameSort" class="org.dataone.cn.indexer.parser.SolrField">
+		<constructor-arg name="name" value="authorSurNameSort" />
+		<constructor-arg name="xpath"
+			value="//dcterms:creator[1]/text()" />
+		<property name="multivalue" value="false" />
+	</bean>
 	
 	<bean id="dryad.keywords" class="org.dataone.cn.indexer.parser.SolrField">
 		<constructor-arg name="name" value="keywords" />

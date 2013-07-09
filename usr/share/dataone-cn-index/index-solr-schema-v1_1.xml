@@ -190,7 +190,9 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
 				<tokenizer class="solr.KeywordTokenizerFactory"/>
 				<filter class="solr.LowerCaseFilterFactory"/>
 				<filter class="solr.TrimFilterFactory"/>
+			<!--  
 				<filter class="solr.PatternReplaceFilterFactory" pattern="([^a-z])" replacement="" replace="all"/>
+			-->
 			</analyzer>
 		</fieldType>
 		
@@ -246,8 +248,8 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="author"				type="string"			multiValued="false"	indexed="true"	stored="true" />
         <field name="authorSurName"			type="string"			multiValued="false"	indexed="true"	stored="true" />
         <field name="authorGivenName"		type="string" 			multiValued="false"	indexed="true"	stored="true" />
-        <field name="authorSurNameSort"		type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="false" />
-        <field name="authorGivenNameSort"	type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="false" />
+        <field name="authorSurNameSort"		type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="true" />
+        <field name="authorGivenNameSort"	type="alphaOnlySort"	multiValued="false"	indexed="true"	stored="true" />
         
         <field name="authorLastName"	type="string"	multiValued="true"	indexed="true" stored="true" />
         
@@ -266,7 +268,7 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="scientificName"           type="string"    multiValued="true" indexed="true" stored="true" />
         <field name="relatedOrganizations"     type="string"    multiValued="true" indexed="true" stored="true" />
         <field name="datePublished"            type="date"      multiValued="false" indexed="true" stored="true" />
-        <field name="pubDate" 				   type="date" 							indexed="true" stored="true"/>
+        <field name="pubDate" 				   type="date" 		multiValued="false"	indexed="true" stored="true"/>
 
 		<field name="investigator" 		type="string" 	indexed="true" stored="true" multiValued="true"/>
 		<field name="investigatorText" 	type="text" 	indexed="true" stored="false" multiValued="true"/>
@@ -374,8 +376,8 @@ ways, or to add multiple fields to the same field for easier/faster searching.  
     <copyField source="id" dest="sku"/>
     <copyField source="id" dest="identifier"/>
 
-	<copyfield source="authorSurName" dest="authorSurNameSort" />
-	<copyfield source="authorGivenName" dest="authorGivenNameSort" />
+	<copyfield source="authorSurName" dest="authorSurNameSort"/>
+	<copyfield source="authorGivenName" dest="authorGivenNameSort"/>
 
     <copyField source="title" dest="titlestr"/>
 
@@ -392,8 +394,8 @@ ways, or to add multiple fields to the same field for easier/faster searching.  
     <copyField source="topic" dest="topicText"/>
     <copyField source="investigator" dest="investigatorText"/>
     <copyField source="keywords" dest="keywordsText"/>
-    <copyField source="pubDate" dest="datePublished" />
-    <copyField source="dateUploaded" dest="updateDate" />
+    <copyField source="pubDate" dest="datePublished"/>
+    <copyField source="dateUploaded" dest="updateDate"/>
     <copyField source="contactOrganization" dest="contactOrganizationText"/>
   
 

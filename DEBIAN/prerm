@@ -32,8 +32,8 @@ rm -f /usr/share/java/d1_index_task_generator_daemon.jar
 rm -f /usr/share/java/d1_index_task_processor_daemon.jar
 
 ### Handle postgres cleanup
-PG=postgresql-8.4
-PG_CONF=/etc/postgresql/8.4/main
+PG=postgresql
+PG_CONF=/etc/postgresql/9.1/main
 PG_USER=postgres
 
 INDEX_DB=d1-index-queue
@@ -51,8 +51,8 @@ echo "Restarting postgres database"
 /etc/init.d/${PG} restart
 
 ######## Restore original solr index schema
-/etc/init.d/tomcat6 stop
-/etc/init.d/tomcat6 start
+/etc/init.d/tomcat7 stop
+/etc/init.d/tomcat7 start
 
 ## Update DateONE Version Info Doc
 java -jar /usr/share/dataone-cn-version-tool/dataone-cn-version-tool.jar -F/usr/share/dataone-cn-version-tool/version-tool.properties -html > /var/www/cn-version.html

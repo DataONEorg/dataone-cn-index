@@ -22,27 +22,27 @@ cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.pr
 cp /usr/share/dataone-cn-index/queryFieldDescriptions.properties /etc/dataone/index/solr/queryFieldDescriptions.properties
 cp -rf /usr/share/dataone-cn-index/debian/index-generation-context /etc/dataone/index/
 
-chown -R tomcat6.tomcat6 /etc/dataone/index
+chown -R tomcat7:tomcat7 /etc/dataone/index
 
 cp /usr/share/dataone-cn-index/d1_index_task_generator_daemon.jar /usr/share/java
 cp /usr/share/dataone-cn-index/d1_index_task_processor_daemon.jar /usr/share/java
 cp /usr/share/dataone-cn-index/d1_index_build_tool.jar /usr/share/java
 
-chown -R tomcat6.tomcat6 /usr/share/java/d1_index_task_generator_daemon.jar
-chown -R tomcat6.tomcat6 /usr/share/java/d1_index_task_processor_daemon.jar
-chown -R tomcat6.tomcat6 /usr/share/java/d1_index_build_tool.jar
+chown -R tomcat7:tomcat7 /usr/share/java/d1_index_task_generator_daemon.jar
+chown -R tomcat7:tomcat7 /usr/share/java/d1_index_task_processor_daemon.jar
+chown -R tomcat7:tomcat7 /usr/share/java/d1_index_build_tool.jar
 
 if [ ! -d "/var/log/dataone/index" ]; then
   mkdir  /var/log/dataone/index
 fi
-chown tomcat6.tomcat6 /var/log/dataone/index
+chown tomcat7:tomcat7 /var/log/dataone/index
 
 
 ###############################################################################
 # Configure Postgres
 ###############################################################################
-PG=postgresql-8.4
-PG_CONF=/etc/postgresql/8.4/main
+PG=postgresql
+PG_CONF=/etc/postgresql/9.1/main
 PG_USER=postgres
 
 INDEX_DB=d1-index-queue
@@ -76,7 +76,7 @@ echo "Restarting postgres database"
 ######################################################
 
 
-/etc/init.d/tomcat6 stop
+/etc/init.d/tomcat7 stop
 
 if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
@@ -124,10 +124,10 @@ else
 fi
 
 ##########################
-chown -R tomcat6.tomcat6 /usr/share/solr/d1-cn-index/
-chown -R tomcat6.tomcat6 /etc/dataone/index/solr
+chown -R tomcat7:tomcat7 /usr/share/solr/d1-cn-index/
+chown -R tomcat7:tomcat7 /etc/dataone/index/solr
 
-/etc/init.d/tomcat6 start
+/etc/init.d/tomcat7 start
 
 ######### Finished! inform user how to start daemons
 echo ""

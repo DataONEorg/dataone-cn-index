@@ -36,7 +36,7 @@ DAEMON="/usr/bin/jsvc"
 DAEMON_HOME="/usr/share/java"
 LOG_DIR="/var/log/dataone/index"
 CLASSPATH="$DAEMON_HOME/commons-daemon.jar:$DAEMON_HOME/d1_index_task_generator_daemon.jar"
-USER_NAME="tomcat6"
+USER_NAME="tomcat7"
 JVM_TMP="/tmp/$NAME-temp"
 BOOTSTRAP_CLASS="org.dataone.cn.index.generator.IndexTaskGeneratorDaemon"
 OUTPUT_FILE="$LOG_DIR/d1-index-task-generator-jsvc.log"
@@ -54,7 +54,7 @@ fi
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
 # defined in $DEFAULT)
-JDK_DIRS="/usr/lib/jvm/java-6-sun"
+JDK_DIRS="/usr/lib/jvm/java-1.7.0-openjdk-amd64"
 
 if [ -z "$JAVA_OPTS" ]; then
 	JAVA_OPTS="-Djava.awt.headless=true -XX:UseParallelGC -Xmx4096M -Xms1024M"

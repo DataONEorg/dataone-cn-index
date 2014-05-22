@@ -35,7 +35,7 @@ chown -R tomcat7:tomcat7 /usr/share/java/d1_index_build_tool.jar
 if [ ! -d "/var/log/dataone/index" ]; then
   mkdir  /var/log/dataone/index
 fi
-chown tomcat7:tomcat7 /var/log/dataone/index
+chown -R tomcat7:tomcat7 /var/log/dataone/index
 
 
 ###############################################################################

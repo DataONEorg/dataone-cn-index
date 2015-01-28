@@ -4,8 +4,12 @@
 
  <bean id="eml201Subprocessor"
   class="org.dataone.cn.indexer.parser.ScienceMetadataDocumentSubprocessor">
-  <property name="matchDocument"
-   value="/d100:systemMetadata/formatId[text() = 'eml://ecoinformatics.org/eml-2.0.1']"></property>
+  <property name="xmlNamespaceConfig" ref="xmlNamespaceConfig" />
+  <property name="matchDocuments">
+		<list>
+			<value>eml://ecoinformatics.org/eml-2.0.1</value>
+		</list>
+	</property>
   <property name="fieldList">
    <list>
     <ref bean="eml.abstract" />
@@ -52,7 +56,7 @@
     <ref bean="eml.geohash6" />
     <ref bean="eml.geohash7" />
     <ref bean="eml.geohash8" />
-    <ref bean="eml.geohash9" /> 
+    <ref bean="eml.geohash9" />    
    </list>
   </property>
  </bean>

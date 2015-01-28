@@ -4,8 +4,12 @@
 
  <bean id="fgdcEsri80Subprocessor"
   class="org.dataone.cn.indexer.parser.ScienceMetadataDocumentSubprocessor">
-  <property name="matchDocument"
-   value="/d100:systemMetadata/formatId[text() = 'http://www.esri.com/metadata/esriprof80.dtd']"></property>
+  <property name="xmlNamespaceConfig" ref="xmlNamespaceConfig" />
+  	<property name="matchDocuments">
+		<list>
+			<value>http://www.esri.com/metadata/esriprof80.dtd</value>
+		</list>
+	</property>
   <property name="fieldList">
    <list>
 	    <ref bean="fgdc.abstract" />
@@ -46,7 +50,7 @@
 	    <ref bean="fgdc.attributeLabel" />
 	    <ref bean="fgdc.attributeDescription" />
 	    <ref bean="fgdc.attributeUnit" />
-	    <ref bean="fgdc.attributeText" />	  
+	    <ref bean="fgdc.attributeText" />
 	  <ref bean="fgdc.geohash1" />
     <ref bean="fgdc.geohash2" />
     <ref bean="fgdc.geohash3" />

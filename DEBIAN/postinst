@@ -147,7 +147,10 @@ if [ -n "$SCHEMA_UPDATE" ]; then
   echo "Use: /usr/share/dataone-cn-index/scripts/migrate-search-index.sh"
 fi
 
+
 #install for solr4 usage
+SOLR4_INSTALL_DIR=/var/solr/
+
 if [ -e ${SOLR4_INSTALL_DIR} ]; then
   echo 'solr4 installed.  copying solr.properties for solr4...'
   cp /usr/share/dataone-cn-index/debian/solr4.properties /etc/dataone/index/solr.properties

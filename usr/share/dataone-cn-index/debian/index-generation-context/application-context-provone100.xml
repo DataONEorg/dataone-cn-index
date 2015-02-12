@@ -22,8 +22,11 @@
                 <ref bean="prov.usedByProgram" />
                 <ref bean="prov.usedByExecution" />
                 <ref bean="prov.usedByUser" />
-                <ref bean="prov.hadExecution" />
+                <ref bean="prov.wasExecutedByExecution" />
+                <ref bean="prov.wasExecutedByUser" />
                 <ref bean="prov.instanceOfClass" />
+                <ref bean="prov.hasSources" />
+                <ref bean="prov.hasDerivations" />
 			</list>
 		</property>	
 	</bean>

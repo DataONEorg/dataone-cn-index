@@ -27,12 +27,14 @@
 				<ref bean="qualifiedDublicCoreSubprocessor" />
 				<ref bean="dublinCoreExtendedSubprocessor" />
                 <ref bean="datacite3Subprocessor" />
+                <ref bean="annotatorSubprocessor" />
 				<!-- ref bean="provRdfXmlSubprocessor" /-->
 			</list>
      	</property>
      	<property name="deleteSubprocessors">
      		<list>
      			<ref bean="resourceMapDeleteSubprocessor" />
+     			<ref bean="annotatorDeleteSubprocessor" />
      		</list>
      	</property>
 	</bean>

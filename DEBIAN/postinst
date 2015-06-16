@@ -15,12 +15,23 @@ if [ ! -d "/etc/dataone/index/solr" ]; then
 fi
 
 #provide context properties files for postgres, log4j, solr location
+cp /usr/share/dataone-cn-index/debian/d1client.properties /etc/dataone/index/d1client.properties
 cp /usr/share/dataone-cn-index/debian/log4j-generator.properties /etc/dataone/index/log4j-generator.properties
 cp /usr/share/dataone-cn-index/debian/log4j-processor.properties /etc/dataone/index/log4j-processor.properties
 cp /usr/share/dataone-cn-index/debian/jdbc.properties /etc/dataone/index/jdbc.properties
 cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.properties
 cp /usr/share/dataone-cn-index/queryFieldDescriptions.properties /etc/dataone/index/solr/queryFieldDescriptions.properties
 cp -rf /usr/share/dataone-cn-index/debian/index-generation-context /etc/dataone/index/
+
+db_get dataone-cn-os-core/cn.hostname
+HOSTNAME=$RET
+if [ "$HOSTNAME" != "" ]
+then
+  sed -i.bak  's/SERVER_NAME/'${HOSTNAME}'/' /etc/dataone/index/d1client.properties
+else
+  log "HOSTNAME can not be set in /etc/dataone/d1client.properties"
+fi
+
 
 chown -R tomcat7:tomcat7 /etc/dataone/index
 

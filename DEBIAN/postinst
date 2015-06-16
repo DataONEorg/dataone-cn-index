@@ -23,13 +23,22 @@ cp /usr/share/dataone-cn-index/debian/solr.properties /etc/dataone/index/solr.pr
 cp /usr/share/dataone-cn-index/queryFieldDescriptions.properties /etc/dataone/index/solr/queryFieldDescriptions.properties
 cp -rf /usr/share/dataone-cn-index/debian/index-generation-context /etc/dataone/index/
 
+
+# source the debconf library
+if [ -e "/usr/share/debconf/confmodule" ]; then
+    . /usr/share/debconf/confmodule
+else
+    echo "debconf must be installed. Exiting."
+    exit 1
+fi
+
 db_get dataone-cn-os-core/cn.hostname
 HOSTNAME=$RET
 if [ "$HOSTNAME" != "" ]
 then
   sed -i.bak  's/SERVER_NAME/'${HOSTNAME}'/' /etc/dataone/index/d1client.properties
 else
-  log "HOSTNAME can not be set in /etc/dataone/d1client.properties"
+  echo "HOSTNAME can not be set in /etc/dataone/d1client.properties"
 fi
 
 

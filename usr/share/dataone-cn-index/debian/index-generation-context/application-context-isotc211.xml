@@ -4,8 +4,12 @@
 
 	<bean id="isotc211Subprocessor"
 	  	class="org.dataone.cn.indexer.parser.ScienceMetadataDocumentSubprocessor">
-		<property name="matchDocument"
-	   		value="/d100:systemMetadata/formatId[text() = 'http://www.isotc211.org/2005/gmd']"></property>
+	  	<property name="xmlNamespaceConfig" ref="xmlNamespaceConfig" />
+		<property name="matchDocuments">
+	   		<list>
+				<value>http://www.isotc211.org/2005/gmd</value>
+			</list>
+	   	</property>
 	  	<property name="fieldList">
 		   	<list>
 		    	<ref bean="isotc.abstract" />

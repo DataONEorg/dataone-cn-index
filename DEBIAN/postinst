@@ -168,12 +168,12 @@ if [ -n "$SCHEMA_UPDATE" ]; then
 fi
 
 
-#install for solr4 usage
-SOLR4_INSTALL_DIR=/var/solr/
+#install for solr5 usage
+SOLR5_INSTALL_DIR=/var/solr/
 
-if [ -e ${SOLR4_INSTALL_DIR} ]; then
-  echo 'solr4 installed.  copying solr.properties for solr4...'
-  cp /usr/share/dataone-cn-index/debian/solr4.properties /etc/dataone/index/solr.properties
+if [ -e ${SOLR5_INSTALL_DIR} ]; then
+  echo 'solr5 installed.  copying solr.properties for solr4...'
+  cp /usr/share/dataone-cn-index/debian/solr5.properties /etc/dataone/index/solr.properties
 fi
 
 ## Update DateONE Version Info Doc

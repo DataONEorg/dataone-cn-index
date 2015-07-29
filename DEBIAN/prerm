@@ -51,8 +51,8 @@ echo "Restarting postgres database"
 /etc/init.d/${PG} restart
 
 ######## Restore original solr index schema
-/etc/init.d/tomcat7 stop
-/etc/init.d/tomcat7 start
+#/etc/init.d/tomcat7 stop
+#/etc/init.d/tomcat7 start
 
 ## Update DateONE Version Info Doc
 java -jar /usr/share/dataone-cn-version-tool/dataone-cn-version-tool.jar -F/usr/share/dataone-cn-version-tool/version-tool.properties -html > /var/www/cn-version.html

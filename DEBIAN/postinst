@@ -96,7 +96,7 @@ echo "Restarting postgres database"
 ######################################################
 
 
-/etc/init.d/tomcat7 stop
+#/etc/init.d/tomcat7 stop
 
 if [ -f "/etc/dataone/index/solr/schema.properties" ]; then
   ORIGINAL_SCHEMA_FILE=`awk -F"=" '/schema-file/{ print $2 }' /etc/dataone/index/solr/schema.properties`
@@ -147,7 +147,7 @@ fi
 chown -R tomcat7:tomcat7 /usr/share/solr/d1-cn-index/
 chown -R tomcat7:tomcat7 /etc/dataone/index/solr
 
-/etc/init.d/tomcat7 start
+#/etc/init.d/tomcat7 start
 
 ######### Finished! inform user how to start daemons
 echo ""

@@ -1,7 +1,7 @@
 #!/bin/sh
 #Delete all entries in the SOLR Event index
 XML="<delete><query>*:*</query></delete>"
-SOLR="http://localhost:8080/solr/d1-cn-log/update"
+SOLR="http://localhost:8983/solr/event_core/update"
 
 #Delete
 curl "${SOLR}?commit=true" -H "Content-Type: text/xml" --data-binary ${XML}

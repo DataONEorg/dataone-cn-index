@@ -29,7 +29,7 @@ def main():
     if len(sys.argv) > 1 :
         logFileLocation = str(sys.argv[1])
 
-
+    
     formatRegex = '.+processing time for format:(.+),\s*(\d+)'
     formatToTotalTime = {}
     formatToNumParsed = {}
@@ -42,6 +42,10 @@ def main():
     solrAddRegex = '.+adding docs into Solr index,\s*(\d+)'
     totalTimeInSolrAdd = 0
     totalItemsAdded = 0
+
+    anyIdRegex = '\s*(.+)\s*,\s*(\d+)'
+    allIDsToTime = {}
+    allIDsToOccurences = {}
 
 
     # collect times by regex match:
@@ -66,7 +70,7 @@ def main():
                 totalTimeInSolrAdd += time
                 totalItemsAdded = totalItemsAdded + 1
 
-            # formatting log statements
+            # format log statements
             formatMatch = re.match(formatRegex, line)    
             if formatMatch :
                 formatName = formatMatch.group(1)
@@ -81,6 +85,25 @@ def main():
 
                 formatToTotalTime[formatName] = parseTime
                 formatToNumParsed[formatName] = numParsed
+
+            # all log statements
+            anyLogMatch = re.match(anyIdRegex, line)
+            if anyLogMatch :
+                logId = anyLogMatch.group(1)
+                time = int(anyLogMatch.group(2))
+                totalTime = 0
+                occurences = 0
+                
+                if logId in allIDsToTime :
+                    totalTime = allIDsToTime[logId] + time
+                if logId in allIDsToOccurences :
+                    occurences = allIDsToOccurences[logId] + 1
+
+                allIDsToTime[logId] = totalTime
+                allIDsToOccurences[logId] = occurences
+
+
+    # printing out statistics...
 
     print '--------------------------------------------------------------------------------------'
     # print out total & avg times for processing / adding to solr

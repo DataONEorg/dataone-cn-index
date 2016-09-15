@@ -61,8 +61,12 @@ chown -R tomcat7:tomcat7 /var/log/dataone/index
 # Configure Postgres
 ###############################################################################
 PG=postgresql
-PG_CONF=/etc/postgresql/9.1/main
 PG_USER=postgres
+if [ -e "/etc/postgresql/9.3/main" ]; then
+    PG_CONF=/etc/postgresql/9.3/main
+else
+    PG_CONF=/etc/postgresql/9.1/main
+fi
 
 INDEX_DB=d1-index-queue
 INDEX_DB_USER=indexer

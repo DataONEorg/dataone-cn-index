@@ -33,7 +33,6 @@ rm -f /usr/share/java/d1_index_task_processor_daemon.jar
 
 ### Handle postgres cleanup
 PG=postgresql
-PG_CONF=/etc/postgresql/9.1/main
 PG_USER=postgres
 
 INDEX_DB=d1-index-queue

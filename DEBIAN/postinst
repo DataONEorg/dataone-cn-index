@@ -87,10 +87,28 @@ fi
 
 ## create index task schema and user
 echo "Creating index task database schema"
-su ${PG_USER} -c "createdb ${INDEX_DB}"
+if su ${PG_USER} -c "psql -lqt | cut -d \| -f 1 | grep -qw $INDEX_DB" ; then
+  echo "DB $INDEX_DB exists and we will not create it"
+else
+  echo "DB $INDEX_DB does not exist and we will create it"
+  if ! (su ${PG_USER} -c "createdb ${INDEX_DB}"); then
+      echo "Unable to createdb ${INDEX_DB}"
+      exit 1
+  fi
+fi
+#su ${PG_USER} -c "createdb ${INDEX_DB}"
 
 echo "Creating index task db user - indexer" 
-su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""
+if su - $PG_USER -c "psql -t -c '\du'| cut -d \| -f 1 | grep -qw $INDEX_DB_USER" ; then
+  echo "User $INDEX_DB_USER exists and we will not create it"
+else
+  echo "User $INDEX_DB_USER does not exist and we will create it"
+  if ! (su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""); then
+      echo "Unable to CREATE USER ${INDEX_DB_USER}"
+      exit 1
+  fi
+fi
+#su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""
 
 
 ## Restart the postgres db

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -42,7 +42,7 @@ BOOTSTRAP_CLASS="org.dataone.cn.index.generator.IndexTaskGeneratorDaemon"
 OUTPUT_FILE="$LOG_DIR/d1-index-task-generator-jsvc.log"
 ERROR_FILE="$LOG_DIR/d1-index-task-generator-jsvc.err"
 
-if [ `id -u` -ne 0 ]; then
+if [ $(id -u) -ne 0 ]; then
 	echo "You need root privileges to run this script"
 	exit 1
 fi
@@ -63,9 +63,9 @@ fi
 
 # Look for the right JVM to use
 for jdir in $JDK_DIRS; do
-    if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
+	if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
 	JAVA_HOME="$jdir"
-    fi
+	fi
 done
 export JAVA_HOME
 
@@ -80,9 +80,11 @@ fi
 RUN_PID="/var/run/$NAME.pid"
 
 case  $1  in 
-	  "start")
-		ulimit -Hn 16384
-		ulimit -Sn 16384
+	"start")
+		if (( $(ulimit -n) < 16384 )); then
+			ulimit -Hn 16384
+  			ulimit -Sn 16384
+		fi
 		if [ -z "$JAVA_HOME" ]; then
 			log_failure_msg "no JDK found - please set JAVA_HOME"
 			exit 1
@@ -114,24 +116,24 @@ case  $1  in
 			-pidfile "$RUN_PID" -user "$USER_NAME" \
 			$JAVA_OPTS "$BOOTSTRAP_CLASS"
 
-		    sleep 5
-        	if start-stop-daemon --test --start --pidfile "$RUN_PID" \
-			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
-			>/dev/null; then
+			sleep 5
+			if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+				--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+				>/dev/null; then
 				log_end_msg 1
 			else
 				log_end_msg 0
 			fi
 		else
-	        log_progress_msg "(already running)"
-	        log_end_msg 0
-	    fi
-	    ;;
+			log_progress_msg "(already running)"
+			log_end_msg 0
+		fi
+		;;
 			
 
 	"stop") 
 		log_daemon_msg "Stopping $DESC" "$NAME"
-			if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+		if start-stop-daemon --test --start --pidfile "$RUN_PID" \
 			--user "$USER_NAME" --startas "$JAVA_HOME/bin/java" \
 			>/dev/null; then
 			log_progress_msg "(not running)"
@@ -144,11 +146,10 @@ case  $1  in
 		rm -rf "$JVM_TMP"
 		log_end_msg 0
 		;;
-   "status")
-        if start-stop-daemon --test --start --pidfile "$RUN_PID" \
-		--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
-		>/dev/null; then
-	
+	"status")
+		if start-stop-daemon --test --start --pidfile "$RUN_PID" \
+			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+			>/dev/null; then
 			if [ -f "$RUN_PID" ]; then
 				log_success_msg "$DESC is not running, but pid file exists."
 				exit 1
@@ -160,22 +161,24 @@ case  $1  in
 			log_success_msg "$DESC is running with pid `cat $RUN_PID`"
 		fi
 		;;
-  "restart"|"force-reload")
-  	  ulimit -Hn 16384
-  	  ulimit -Sn 16384
-      if start-stop-daemon --test --stop --pidfile "$RUN_PID" \
-		--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
-		>/dev/null; then
-		$0 stop
-		sleep 1
-	  fi
-	 $0 start
-	 ;;
-  *)
-	log_success_msg "Usage: $0 {start|stop|restart|force-reload|status}"
-	exit 1
-	;;
+	"restart"|"force-reload")
+		if (( $(ulimit -n) < 16384 )); then
+			ulimit -Hn 16384
+  			ulimit -Sn 16384
+		fi
+		if start-stop-daemon --test --stop --pidfile "$RUN_PID" \
+			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
+			>/dev/null; then
+			$0 stop
+			sleep 1
+		fi
+		$0 start
+		;;
+	*)
+		log_success_msg "Usage: $0 {start|stop|restart|force-reload|status}"
+		exit 1
+		;;
 esac
 
 exit 0
-    
+	

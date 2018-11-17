@@ -1,6 +1,9 @@
 #!/bin/bash
-
-# reloads a Solr core
+# Reloads a Solr core
+# 
+# See https://wiki.apache.org/solr/CoreAdmin#RELOAD
+#
+SOLR_URL="http://localhost:8983/solr"
 if [ "$1" = "" ]; then
   echo -n "Name of core to reload: "
   read name
@@ -13,4 +16,4 @@ if [ ! -d /var/lib/solr/data/$name ] || [ $name = "" ]; then
   exit
 fi
 
-curl "http://localhost:8080/solr/admin/cores?action=RELOAD&core=$name"
+curl "${SOLR_URL}/admin/cores?action=RELOAD&core=${name}"

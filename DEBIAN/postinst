@@ -1,6 +1,11 @@
 #!/bin/bash
-
-LONG_DATE=`date +%Y%m%d%H%M%S`
+#
+# 1. setup /etc/dataone/index
+# 2. Install d1_index_task_generator, d1_index_task_processor and 
+#    d1_index_build_tool jars
+# 3. Setup postgres d1-index-queue database
+#
+LONG_DATE=$(date +%Y%m%d%H%M%S)
 VAR_DATAONE=/var/dataone
 TOMCAT_USER=tomcat7
 

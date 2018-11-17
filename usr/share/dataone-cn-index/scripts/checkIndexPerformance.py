@@ -20,16 +20,14 @@ import collections
 import operator
 
 def main():
-
     if len(sys.argv) > 2 :
-        print 'Usage: ' + str(sys.argv[0]) + ' [logFileLocation]'
+        print('Usage: ' + str(sys.argv[0]) + ' [logFileLocation]')
         return
 
     logFileLocation = "."
     if len(sys.argv) > 1 :
         logFileLocation = str(sys.argv[1])
 
-    
     formatRegex = '.+processing time for format:(.+),\s*(\d+)'
     formatToTotalTime = {}
     formatToNumParsed = {}
@@ -47,14 +45,13 @@ def main():
     allIDsToTime = {}
     allIDsToOccurences = {}
 
-
     # collect times by regex match:
     for filename in os.listdir(logFileLocation) :
         if (not filename.startswith("cn-indexing-performance.log")) and (not filename.startswith("cn-indexing-tool-performance.log")) :
             continue
-        print 'checking file: ' + filename
+        print('checking file: ' + filename)
 
-        for line in open(logFileLocation + filename).xreadlines() :
+        for line in open(logFileLocation + filename) :
 
             # processing time log statements
             processingTimeMatch = re.match(processingTimeRegex, line)
@@ -104,44 +101,43 @@ def main():
 
 
     # printing out statistics...
-
-    print '--------------------------------------------------------------------------------------'
+    print('--------------------------------------------------------------------------------------')
     # print out total & avg times for processing / adding to solr
-    print 'total time spent processing:     ' + str(totalTimeInProcessing)
-    print 'avg time processing per object:  ' + str(totalTimeInProcessing / totalItemsProcessed)
+    print('total time spent processing:     ' + str(totalTimeInProcessing))
+    print('avg time processing per object:  ' + str(totalTimeInProcessing / totalItemsProcessed))
 
-    print 'total time spent adding to solr: ' + str(totalTimeInSolrAdd)
-    print 'avg time spent adding an object: ' + str(totalTimeInSolrAdd / totalItemsAdded)
+    print('total time spent adding to solr: ' + str(totalTimeInSolrAdd))
+    print('avg time spent adding an object: ' + str(totalTimeInSolrAdd / totalItemsAdded))
 
-    print '--------------------------------------------------------------------------------------'
+    print('--------------------------------------------------------------------------------------')
     # print out avg time:
     formatToAvgTime = {}
-    for key, val in formatToTotalTime.iteritems() :
+    for key, val in formatToTotalTime.items() :
         numParsed = formatToNumParsed[key]
         avgTime = float (val) / numParsed
         formatToAvgTime[key] = avgTime
 
-    sortedFormatToAvgTime = collections.OrderedDict(sorted(formatToAvgTime.items(), key = operator.itemgetter(1), reverse=True))
-    for key, val in sortedFormatToAvgTime.iteritems() :
-        print 'format: {0:50} avg time: {1:.2f} ms'.format(key, val)
+    sortedFormatToAvgTime = collections.OrderedDict(sorted(list(formatToAvgTime.items()), key = operator.itemgetter(1), reverse=True))
+    for key, val in sortedFormatToAvgTime.items() :
+        print('format: {0:50} avg time: {1:.2f} ms'.format(key, val))
 
-    print '--------------------------------------------------------------------------------------'
+    print('--------------------------------------------------------------------------------------')
     # print num docs:
-    sortedNumParsed = collections.OrderedDict(sorted(formatToNumParsed.items(), key = operator.itemgetter(1), reverse=True))
-    for key, val in sortedNumParsed.iteritems() :
+    sortedNumParsed = collections.OrderedDict(sorted(list(formatToNumParsed.items()), key = operator.itemgetter(1), reverse=True))
+    for key, val in sortedNumParsed.items() :
         numParsed = formatToNumParsed[key]
-        print 'items of format {0:50} : {1}'.format(key, str(numParsed))
+        print('items of format {0:50} : {1}'.format(key, str(numParsed)))
 
-    print '--------------------------------------------------------------------------------------'
+    print('--------------------------------------------------------------------------------------')
 
     # print format by % of total time
-    sortedByTimeList = sorted(formatToTotalTime.items(), key = operator.itemgetter(1), reverse=True)
+    sortedByTimeList = sorted(list(formatToTotalTime.items()), key = operator.itemgetter(1), reverse=True)
     for entry in sortedByTimeList :
         key = entry[0]
         val = entry[1]
-        print '{0:.2f}% of time   in   format: {1}'.format((float(val)/totalTimeInFormats * 100.0), key)
+        print('{0:.2f}% of time   in   format: {1}'.format((float(val)/totalTimeInFormats * 100.0), key))
 
-    print '--------------------------------------------------------------------------------------'
+    print('--------------------------------------------------------------------------------------')
 
 if __name__ == "__main__":
   main()

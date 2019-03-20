@@ -7,7 +7,7 @@
 #
 LONG_DATE=$(date +%Y%m%d%H%M%S)
 VAR_DATAONE=/var/dataone
-TOMCAT_USER=tomcat7
+TOMCAT_USER=tomcat8
 
 chmod +x /etc/init.d/d1-index-task-generator
 chmod +x /etc/init.d/d1-index-task-processor
@@ -86,10 +86,10 @@ fi
 ###############################################################################
 PG=postgresql
 PG_USER=postgres
-if [ -e "/etc/postgresql/9.3/main" ]; then
-    PG_CONF=/etc/postgresql/9.3/main
+if [ -e "/etc/postgresql/10/main" ]; then
+    PG_CONF=/etc/postgresql/10/main
 else
-    PG_CONF=/etc/postgresql/9.1/main
+    PG_CONF=/etc/postgresql/9.3/main
 fi
 
 INDEX_DB=d1-index-queue

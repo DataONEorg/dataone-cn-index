@@ -127,7 +127,7 @@ if su - $PG_USER -c "psql -t -c '\du'| cut -d \| -f 1 | grep -qw $INDEX_DB_USER"
   echo "User $INDEX_DB_USER exists and we will not create it"
 else
   echo "User $INDEX_DB_USER does not exist and we will create it"
-  if ! (su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""); then
+  if ! (su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH PASSWORD '${INDEX_DB_PASS}'\""); then
       echo "Unable to CREATE USER ${INDEX_DB_USER}"
       exit 1
   fi

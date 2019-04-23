@@ -132,7 +132,7 @@ else
       exit 1
   fi
 fi
-#su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH UNENCRYPTED PASSWORD '${INDEX_DB_PASS}'\""
+#su ${PG_USER} -c "psql -c \"CREATE USER ${INDEX_DB_USER} WITH PASSWORD '${INDEX_DB_PASS}'\""
 
 
 ## Restart the postgres db

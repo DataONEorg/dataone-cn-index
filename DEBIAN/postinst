@@ -72,13 +72,12 @@ fi
 
 if [ ! -d ${VAR_DATAONE}/index ]; then
   mkdir ${VAR_DATAONE}/index
-  chown ${TOMCAT_USER}:${TOMCAT_USER} ${VAR_DATAONE}/index
 fi 
 
 if [ ! -d ${VAR_DATAONE}/index/tdb ]; then
   mkdir ${VAR_DATAONE}/index/tdb
-  chown ${TOMCAT_USER}:${TOMCAT_USER} ${VAR_DATAONE}/index/tdb
 fi
+chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${VAR_DATAONE}/index
 
 
 ###############################################################################

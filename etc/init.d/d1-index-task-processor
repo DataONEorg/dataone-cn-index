@@ -76,14 +76,14 @@ if [ -r /etc/default/locale ]; then
 fi
 
 . /lib/lsb/init-functions
-. /etc/default/rcS
+#. /etc/default/rcS
 RUN_PID="/var/run/$NAME.pid"
 
 case  $1  in 
 	"start")
 		if (( $(ulimit -n) < 16384 )); then
-			ulimit -Hn 16384
-  			ulimit -Sn 16384
+			#ulimit -Hn 16384
+  			#ulimit -Sn 16384
 		fi
 		if [ -z "$JAVA_HOME" ]; then
 			log_failure_msg "no JDK found - please set JAVA_HOME"
@@ -162,8 +162,8 @@ case  $1  in
 		;;
 	"restart"|"force-reload")
 		if (( $(ulimit -n) < 16384 )); then
-			ulimit -Hn 16384
-  			ulimit -Sn 16384
+			#ulimit -Hn 16384
+  			#ulimit -Sn 16384
 		fi
 		if start-stop-daemon --test --stop --pidfile "$RUN_PID" \
 			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \

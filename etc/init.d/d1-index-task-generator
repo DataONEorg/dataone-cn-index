@@ -81,10 +81,10 @@ RUN_PID="/var/run/$NAME.pid"
 
 case  $1  in 
 	"start")
-		if (( $(ulimit -n) < 16384 )); then
+		#if (( $(ulimit -n) < 16384 )); then
 			#ulimit -Hn 16384
   			#ulimit -Sn 16384
-		fi
+		#fi
 		if [ -z "$JAVA_HOME" ]; then
 			log_failure_msg "no JDK found - please set JAVA_HOME"
 			exit 1
@@ -162,10 +162,10 @@ case  $1  in
 		fi
 		;;
 	"restart"|"force-reload")
-		if (( $(ulimit -n) < 16384 )); then
+		#if (( $(ulimit -n) < 16384 )); then
 			#ulimit -Hn 16384
   			#ulimit -Sn 16384
-		fi
+		#fi
 		if start-stop-daemon --test --stop --pidfile "$RUN_PID" \
 			--user $USER_NAME --startas "$JAVA_HOME/bin/java" \
 			>/dev/null; then

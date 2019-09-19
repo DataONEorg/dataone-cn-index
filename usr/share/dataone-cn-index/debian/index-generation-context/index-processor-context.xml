@@ -9,7 +9,8 @@
  http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<import resource="classpath:task-index-context.xml"/>
-	<import resource="classpath:index-parser-context.xml"/>
+<!--	<import resource="classpath:index-parser-context.xml"/> -->
+	<import resource="file:/etc/dataone/index/index-generation-context/index-parser-context.xml"/>
 	
 	<bean id="indexTaskGenerator" class="org.dataone.cn.index.generator.IndexTaskGenerator" />
 	

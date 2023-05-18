@@ -79,6 +79,8 @@ fi
 #. /etc/default/rcS
 RUN_PID="/var/run/$NAME.pid"
 
+JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
+
 case  $1  in 
 	"start")
 		#if (( $(ulimit -n) < 16384 )); then
